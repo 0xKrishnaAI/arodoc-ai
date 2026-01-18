@@ -5,8 +5,11 @@ import shutil
 import os
 import json
 import google.generativeai as genai
-from .. import models, schemas, database, config
-from ..auth import get_current_user
+import models
+import schemas
+import database
+import config
+from auth import get_current_user
 
 router = APIRouter(
     prefix="/analysis",
