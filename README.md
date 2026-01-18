@@ -9,8 +9,8 @@ Arodoc AI is a production-ready healthcare application designed to empower users
 
 ## 🌐 Live Demo
 
-**Frontend**: Coming soon (Deploy to Render)  
-**Backend API**: Coming soon
+**Frontend**: https://arodoc-frontend.onrender.com  
+**Backend API**: https://arodoc-backend.onrender.com/docs
 
 ## 🚀 Features
 
