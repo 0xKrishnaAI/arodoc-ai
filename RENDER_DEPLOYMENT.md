@@ -40,7 +40,7 @@ You'll deploy the backend on Render (with free PostgreSQL) and frontend as a sta
    ```
    DATABASE_URL = <paste your PostgreSQL Internal URL>
    SECRET_KEY = <generate with: openssl rand -hex 32>
-   GEMINI_API_KEY = AIzaSyBD-tvUA5gS0whL44Q-Ep7B0GcGbqETFYc
+   GEMINI_API_KEY = <your Google AI Studio API key - get from https://aistudio.google.com/app/apikey>
    ALGORITHM = HS256
    ACCESS_TOKEN_EXPIRE_MINUTES = 30
    ```

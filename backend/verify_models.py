@@ -2,7 +2,7 @@ import google.generativeai as genai
 import os
 
 # Use the key from the environment (or hardcoded for the test if env is tricky)
-API_KEY = "AIzaSyAyBcdBzuFsjEjPkj-cvU88Nr4AwELbVMM" # Using the one user provided
+API_KEY = os.getenv("GEMINI_API_KEY")  # Load from environment variable only
 genai.configure(api_key=API_KEY)
 
 def list_models():
