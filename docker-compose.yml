@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: arodoc_db
+    environment:
+      POSTGRES_USER: arodoc_user
+      POSTGRES_PASSWORD: arodoc_password
+      POSTGRES_DB: arodoc_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: arodoc_backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://arodoc_user:arodoc_password@db:5432/arodoc_db
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    container_name: arodoc_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:8000
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

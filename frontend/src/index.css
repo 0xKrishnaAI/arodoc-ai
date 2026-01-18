@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-secondary font-sans antialiased;
+    font-size: 18px;
+    /* High legibility base */
+  }
+
+  ::selection {
+    background-color: #cffafe;
+    color: #0e7490;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-bold text-slate-800;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-surface/90 backdrop-blur-md border border-white/50 shadow-glass rounded-2xl;
+  }
+
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-700 text-white font-semibold rounded-xl transition-all active:scale-95 shadow-lg shadow-primary/20 flex items-center justify-center;
+  }
+
+  /* Elderly-friendly utility classes */
+  .text-xl-elderly {
+    font-size: 1.5rem;
+    line-height: 1.4;
+  }
+
+  .btn-elderly {
+    @apply min-h-[56px] text-lg px-6 py-3;
+  }
+}
