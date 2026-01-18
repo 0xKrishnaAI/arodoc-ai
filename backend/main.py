@@ -12,7 +12,8 @@ app = FastAPI(title="Arodoc AI API", version="1.0.0")
 origins = [
     "http://localhost:5173",  # React Default
     "http://localhost:3000",
-    "https://*.onrender.com",  # Render deployments
+    "https://arodoc-frontend.onrender.com",  # Frontend deployment
+    "https://arodoc-backend.onrender.com",   # Backend deployment
 ]
 
 app.add_middleware(
