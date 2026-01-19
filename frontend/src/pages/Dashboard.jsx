@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import VitalsForm from '../components/VitalsForm';
 import EditVitalModal from '../components/EditVitalModal';
-import Disclaimer from '../components/Disclaimer';
 import axios from 'axios';
 import { Activity, FileText, AlertTriangle, CheckCircle2, Heart, TrendingUp, Plus, BookOpen, Shield, Edit2 } from 'lucide-react';
 import { motion } from 'framer-motion';

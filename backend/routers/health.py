@@ -276,8 +276,6 @@ def search_hospitals(city: str = "Local", query: str = None, db: Session = Depen
     
     if query:
         query = query.lower()
-    if query:
-        query = query.lower()
         results = [
             f for f in all_facilities 
             if query in f['name'].lower() 

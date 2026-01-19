@@ -242,9 +242,8 @@ function Landing() {
                     <div>
                         <h5 className="text-white font-bold mb-6">Company</h5>
                         <ul className="space-y-4 font-medium">
-                            <li><Link to="/about" className="hover:text-primary transition">About Us</Link></li>
+                            <li><Link to="/guide" className="hover:text-primary transition">User Guide</Link></li>
                             <li><Link to="/privacy" className="hover:text-primary transition">Privacy Policy</Link></li>
-                            <li><Link to="/terms" className="hover:text-primary transition">Terms of Service</Link></li>
                         </ul>
                     </div>
                 </div>
