@@ -3,6 +3,10 @@ from sqlalchemy.orm import Session
 from typing import List
 from .. import models, schemas, database
 from ..auth import get_current_user
+from ..notification_service import notify_emergency_contacts
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/emergency",
@@ -21,13 +25,27 @@ def trigger_sos(location: dict, db: Session = Depends(database.get_db), current_
     db.add(new_alert)
     db.commit()
 
-    # 2. Notify Contacts (Mock print)
+    # 2. Get emergency contacts
     contacts = db.query(models.EmergencyContact).filter(models.EmergencyContact.user_id == current_user.id).all()
-    print(f"SOS TRIGGERED FOR USER {current_user.email} AT {location}")
-    for contact in contacts:
-        print(f"NOTIFYING: {contact.name} at {contact.phone_number}")
-        
-    return {"status": "SOS ACTIVATED", "message": "Emergency contacts notified and alert logged."}
+    
+    # 3. Send real notifications (email + optional SMS)
+    logger.info(f"SOS TRIGGERED FOR USER {current_user.email} AT {location}")
+    notification_results = notify_emergency_contacts(
+        user=current_user,
+        location=location,
+        contacts=contacts
+    )
+    
+    # Log notification results
+    logger.info(f"Notification results: {notification_results['success_count']} sent, {notification_results['failure_count']} failed")
+    
+    return {
+        "status": "SOS ACTIVATED",
+        "message": "Emergency contacts notified and alert logged.",
+        "notifications_sent": notification_results["success_count"],
+        "notifications_failed": notification_results["failure_count"],
+        "contacts_notified": len(contacts)
+    }
 
 @router.post("/contacts", response_model=schemas.EmergencyContactResponse)
 def add_contact(contact: schemas.EmergencyContactCreate, db: Session = Depends(database.get_db), current_user: models.User = Depends(get_current_user)):

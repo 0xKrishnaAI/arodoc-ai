@@ -6,14 +6,48 @@ import { motion } from 'framer-motion';
 const SOSButton = () => {
     const [status, setStatus] = useState('IDLE'); // IDLE, SENDING, SENT, ERROR
 
+    // Get user's current GPS location
+    const getLocation = () => {
+        return new Promise((resolve) => {
+            if (!navigator.geolocation) {
+                resolve({ lat: null, lng: null, error: "Geolocation not supported" });
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    resolve({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        accuracy: position.coords.accuracy
+                    });
+                },
+                (error) => {
+                    console.warn("Location error:", error.message);
+                    resolve({ lat: null, lng: null, error: error.message });
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                }
+            );
+        });
+    };
+
     const handleSOS = async () => {
         setStatus('SENDING');
         try {
+            // Get real GPS location
+            const location = await getLocation();
+
             const token = localStorage.getItem('token');
-            await axios.post('/api/v1/emergency/trigger',
-                { location: "User Location (Mock)" },
+            const response = await axios.post('/api/v1/emergency/trigger',
+                { location },
                 { headers: { 'Authorization': `Bearer ${token}` } }
             );
+
+            console.log("SOS Response:", response.data);
             setStatus('SENT');
             setTimeout(() => setStatus('IDLE'), 5000);
         } catch (err) {
@@ -31,8 +65,8 @@ const SOSButton = () => {
                 onClick={handleSOS}
                 disabled={status !== 'IDLE'}
                 className={`w-48 h-48 rounded-full border-8 shadow-2xl flex flex-col items-center justify-center transition-all ${status === 'SENT' ? 'bg-success border-green-600' :
-                        status === 'ERROR' ? 'bg-gray-500 border-gray-600' :
-                            'bg-danger border-red-600 hover:bg-red-600'
+                    status === 'ERROR' ? 'bg-gray-500 border-gray-600' :
+                        'bg-danger border-red-600 hover:bg-red-600'
                     } text-white`}
             >
                 {status === 'IDLE' && (
