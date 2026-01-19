@@ -10,13 +10,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
-    # Email SMTP Configuration (Primary notification method)
-    SMTP_HOST: str = os.getenv("SMTP_HOST", "smtp.gmail.com")
-    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
-    SMTP_USER: Optional[str] = os.getenv("SMTP_USER")  # Your email address
-    SMTP_PASSWORD: Optional[str] = os.getenv("SMTP_PASSWORD")  # App password for Gmail
-    
-    # Twilio SMS Configuration (Optional - for future use)
+    # Twilio SMS Configuration (Optional - user provides their own credentials)
     TWILIO_ACCOUNT_SID: Optional[str] = os.getenv("TWILIO_ACCOUNT_SID")
     TWILIO_AUTH_TOKEN: Optional[str] = os.getenv("TWILIO_AUTH_TOKEN")
     TWILIO_PHONE_NUMBER: Optional[str] = os.getenv("TWILIO_PHONE_NUMBER")
@@ -25,3 +19,4 @@ class Settings(BaseSettings):
         env_file = ".env"
 
 settings = Settings()
+
