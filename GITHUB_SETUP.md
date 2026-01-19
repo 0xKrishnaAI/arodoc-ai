@@ -6,7 +6,7 @@
 1. Go to [github.com/new](https://github.com/new)
 2. Fill in details:
    - **Repository name**: `arodoc-ai` (or any name you prefer)
-   - **Description**: `AI-powered healthcare companion for seniors`
+   - **Description**: `AI-powered healthcare companion for everyone`
    - **Visibility**: Public (or Private)
    - ⚠️ **DO NOT** check "Add README" or ".gitignore" (we already have these)
 3. Click **"Create repository"**
