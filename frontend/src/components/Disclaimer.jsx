@@ -2,15 +2,16 @@ import { AlertTriangle } from 'lucide-react';
 
 const Disclaimer = ({ className = '' }) => {
     return (
-        <div className={`bg-amber-50 border-2 border-amber-200 rounded-xl p-6 ${className}`}>
+        <div className={`bg-amber-50 border border-amber-200 rounded-xl p-5 ${className}`}>
             <div className="flex items-start gap-4">
-                <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
+                <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center shrink-0">
+                    <AlertTriangle className="w-5 h-5 text-amber-600" />
+                </div>
                 <div>
-                    <h4 className="font-bold text-amber-900 text-lg mb-2">Medical Disclaimer</h4>
-                    <p className="text-amber-900 text-base leading-relaxed">
+                    <h4 className="font-bold text-amber-800 mb-1">Medical Disclaimer</h4>
+                    <p className="text-amber-700 text-sm leading-relaxed">
                         This application provides health monitoring and informational insights only.
                         <strong> It is NOT a replacement for professional medical advice, diagnosis, or treatment.</strong> Always consult a qualified healthcare provider for medical concerns.
-                        Never disregard professional medical advice or delay seeking it because of information from this app.
                     </p>
                 </div>
             </div>

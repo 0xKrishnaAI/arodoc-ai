@@ -54,15 +54,16 @@ We have included scripts to verify the core functionality:
 
 ### Quick Start (Local Development)
 
+> **Note:** All commands should be run from the project root folder (`VIBE APP/`)
+
 #### 1. Backend Setup
 ```bash
-cd backend
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 # Set your GEMINI_API_KEY in backend/config.py or environment
-python -m uvicorn main:app --reload
+python -m uvicorn backend.main:app --reload
 ```
 
-#### 2. Frontend Setup
+#### 2. Frontend Setup (New Terminal)
 ```bash
 cd frontend
 npm install

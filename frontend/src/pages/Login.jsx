@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, Mail, Lock, ArrowRight } from 'lucide-react';
+import { LogIn, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Login = () => {
@@ -32,30 +32,41 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background pb-20 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100 via-background to-background">
+        <div className="min-h-screen bg-background pb-24 gradient-hero">
             <Navbar />
+
+            {/* Enhanced background effects */}
+            <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary-200/20 blur-[120px] animate-pulse-soft"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-accent/20 blur-[120px] animate-pulse-soft" style={{ animationDelay: '1s' }}></div>
+                <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] rounded-full bg-blue-100/30 blur-[100px] animate-float"></div>
+            </div>
+
             <div className="max-w-md mx-auto pt-32 lg:pt-40 px-6">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="glass-panel p-8 md:p-10 shadow-xl"
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                    className="glass-panel p-8 md:p-10 shadow-glass-lg border-white/50 backdrop-blur-2xl"
                 >
+                    {/* Header */}
                     <div className="text-center mb-10">
-                        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto mb-6">
-                            <LogIn className="w-8 h-8" />
+                        <div className="w-16 h-16 bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl flex items-center justify-center text-primary mx-auto mb-6 border border-primary-100 shadow-soft">
+                            <LogIn className="w-7 h-7" />
                         </div>
-                        <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome Back</h2>
-                        <p className="text-slate-500 font-medium">Sign in to access your health dashboard</p>
+                        <h2 className="text-2xl lg:text-3xl font-bold text-slate-800 mb-2">Welcome Back</h2>
+                        <p className="text-slate-500">Sign in to access your health dashboard</p>
                     </div>
 
-                    <form onSubmit={handleLogin} className="space-y-6">
+                    {/* Form */}
+                    <form onSubmit={handleLogin} className="space-y-5">
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+                            <label className="text-sm font-semibold text-slate-600 ml-1">Email Address</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                                 <input
                                     type="email"
-                                    className="w-full pl-12 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition"
+                                    className="input-field pl-12"
                                     placeholder="name@example.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -65,14 +76,12 @@ const Login = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <div className="flex justify-between items-center ml-1">
-                                <label className="text-sm font-bold text-slate-700">Password</label>
-                            </div>
+                            <label className="text-sm font-semibold text-slate-600 ml-1">Password</label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                                 <input
                                     type="password"
-                                    className="w-full pl-12 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition"
+                                    className="input-field pl-12"
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
@@ -83,20 +92,27 @@ const Login = () => {
 
                         <button
                             disabled={isLoading}
-                            className="w-full bg-primary text-white py-4 rounded-xl font-bold text-lg hover:bg-primary-700 transition flex items-center justify-center gap-2 shadow-lg shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed"
+                            className="w-full btn-primary py-4 text-lg mt-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:transform-none"
                         >
-                            {isLoading ? 'Signing In...' : (
+                            {isLoading ? (
                                 <>
-                                    Sign In <ArrowRight className="w-5 h-5" />
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    Signing In...
+                                </>
+                            ) : (
+                                <>
+                                    Sign In
+                                    <ArrowRight className="w-5 h-5" />
                                 </>
                             )}
                         </button>
                     </form>
 
+                    {/* Footer */}
                     <div className="mt-8 text-center">
-                        <p className="text-slate-500 font-medium">
+                        <p className="text-slate-500">
                             Don't have an account?{' '}
-                            <Link to="/signup" className="text-primary font-bold hover:underline">
+                            <Link to="/signup" className="text-primary font-semibold hover:underline underline-offset-2 transition-colors">
                                 Create Account
                             </Link>
                         </p>

@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import auth, health, analysis, emergency
+from fastapi.staticfiles import StaticFiles
+from .routers import auth, health, analysis, emergency, assistant
 from . import models, database
+import os
 
 # Create Tables
 models.Base.metadata.create_all(bind=database.engine)
@@ -24,11 +26,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount static files for uploaded reports
+os.makedirs("backend/uploads", exist_ok=True)
+app.mount("/uploads", StaticFiles(directory="backend/uploads"), name="uploads")
+
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(health.router, prefix="/api/v1")
 app.include_router(analysis.router, prefix="/api/v1")
 app.include_router(emergency.router, prefix="/api/v1")
+app.include_router(assistant.router, prefix="/api/v1")
 
 @app.get("/")
 def read_root():
     return {"message": "Welcome to Arodoc AI API"}
+
+

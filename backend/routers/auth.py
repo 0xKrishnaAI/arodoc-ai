@@ -23,8 +23,9 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)
         full_name=user.full_name
     )
     db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    
+    # Flush to get the ID for the profile, but don't commit yet
+    db.flush()
 
     # Always create profile even if dob is missing
     new_profile = models.Profile(
@@ -32,7 +33,10 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)
         dob=user.dob
     )
     db.add(new_profile)
+    
+    # Commit both
     db.commit()
+    db.refresh(new_user)
         
     return new_user
 

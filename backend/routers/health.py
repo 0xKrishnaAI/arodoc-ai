@@ -103,6 +103,8 @@ def get_dashboard(db: Session = Depends(database.get_db), current_user: models.U
     latest_hr = get_latest("HR")
     latest_bp = get_latest("BP")
     latest_glucose = get_latest("Glucose")
+    latest_temp = get_latest("Temp")
+    latest_weight = get_latest("Weight")
     
     # Get recent reports
     recent_reports = db.query(models.Report).filter(
@@ -140,6 +142,13 @@ def get_dashboard(db: Session = Depends(database.get_db), current_user: models.U
             health_status = max(health_status, "YELLOW", key=lambda x: ["GREEN", "YELLOW", "RED"].index(x))
             concerns.append("Irregular heart rate")
     
+    # Temperature Check
+    if latest_temp:
+        temp = latest_temp.value_primary
+        if temp > 100.4 or temp < 95:
+            health_status = max(health_status, "YELLOW", key=lambda x: ["GREEN", "YELLOW", "RED"].index(x))
+            concerns.append("Abnormal body temperature")
+    
     # Check recent reports
     for report in recent_reports:
         if report.risk_level == "RED":
@@ -167,6 +176,14 @@ def get_dashboard(db: Session = Depends(database.get_db), current_user: models.U
             "blood_sugar": {
                 "value": int(latest_glucose.value_primary) if latest_glucose else None,
                 "id": latest_glucose.id if latest_glucose else None
+            },
+            "temperature": {
+                "value": round(latest_temp.value_primary, 1) if latest_temp else None,
+                "id": latest_temp.id if latest_temp else None
+            },
+            "weight": {
+                "value": round(latest_weight.value_primary, 1) if latest_weight else None,
+                "id": latest_weight.id if latest_weight else None
             }
         },
         "recent_reports_count": db.query(models.Report).filter(models.Report.user_id == current_user.id).count(),
@@ -186,21 +203,135 @@ def update_vital(vital_id: str, vital_update: schemas.VitalUpdate, db: Session =
     db.refresh(vital)
     return vital
 
+@router.delete("/vitals/{vital_id}")
+def delete_vital(vital_id: str, db: Session = Depends(database.get_db), current_user: models.User = Depends(get_current_user)):
+    vital = db.query(models.Vital).filter(models.Vital.id == vital_id, models.Vital.user_id == current_user.id).first()
+    if not vital:
+        raise HTTPException(status_code=404, detail="Vital record not found")
+    
+    db.delete(vital)
+    db.commit()
+    return {"message": "Vital deleted successfully"}
+
 @router.get("/recommendations")
 def get_recommendations(db: Session = Depends(database.get_db), current_user: models.User = Depends(get_current_user)):
     """
-    Generate personalized health recommendations based on vitals and reports.
+    Generate personalized health recommendations based on user's age, vitals and reports.
+    Uses Gemini AI when API key is available, otherwise falls back to rule-based recommendations.
     """
-    # Get latest vitals
-    latest_vitals = db.query(models.Vital).filter(
-        models.Vital.user_id == current_user.id
-    ).order_by(models.Vital.recorded_at.desc()).first()
+    from ..config import settings
+    from datetime import datetime, date
     
-    # Get latest report
+    # Get user profile for age calculation
+    profile = db.query(models.Profile).filter(models.Profile.user_id == current_user.id).first()
+    
+    # Calculate age
+    user_age = None
+    if profile and profile.dob:
+        today = date.today()
+        dob = profile.dob if isinstance(profile.dob, date) else profile.dob.date()
+        user_age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    
+    # Get latest vitals by category
+    def get_latest_vital(cat):
+        return db.query(models.Vital).filter(
+            models.Vital.user_id == current_user.id,
+            models.Vital.category == cat
+        ).order_by(models.Vital.recorded_at.desc()).first()
+
+    latest_hr = get_latest_vital("HR")
+    latest_bp = get_latest_vital("BP")
+    latest_glucose = get_latest_vital("Glucose")
+    latest_temp = get_latest_vital("Temp")
+    latest_weight = get_latest_vital("Weight")
+    
+    # Get the most recent (newest) report only
     latest_report = db.query(models.Report).filter(
         models.Report.user_id == current_user.id
     ).order_by(models.Report.created_at.desc()).first()
     
+    # Build vitals summary for AI
+    vitals_summary = []
+    if latest_hr:
+        vitals_summary.append(f"Heart Rate: {int(latest_hr.value_primary)} bpm")
+    if latest_bp:
+        bp_str = f"{int(latest_bp.value_primary)}/{int(latest_bp.value_secondary)}" if latest_bp.value_secondary else str(int(latest_bp.value_primary))
+        vitals_summary.append(f"Blood Pressure: {bp_str} mmHg")
+    if latest_glucose:
+        vitals_summary.append(f"Blood Sugar: {int(latest_glucose.value_primary)} mg/dL")
+    if latest_temp:
+        vitals_summary.append(f"Temperature: {latest_temp.value_primary}°F")
+    if latest_weight:
+        vitals_summary.append(f"Weight: {latest_weight.value_primary} kg")
+    
+    # Build report summary for AI (only the newest report)
+    report_summary = ""
+    if latest_report and latest_report.summary:
+        report_summary = f"Latest Report ({latest_report.risk_level}): {latest_report.summary}"
+    
+    # Try AI-powered recommendations
+    if settings.GEMINI_API_KEY:
+        try:
+            import google.generativeai as genai
+            genai.configure(api_key=settings.GEMINI_API_KEY)
+            
+            age_str = f"{user_age} years old" if user_age else "Unknown age"
+            gender_str = profile.gender if profile and profile.gender else "Unknown gender"
+            vitals_str = ", ".join(vitals_summary) if vitals_summary else "No vitals recorded"
+            
+            prompt = f"""You are a health advisor AI. Based on the following patient information, provide personalized health recommendations.
+
+Patient Profile:
+- Age: {age_str}
+- Gender: {gender_str}
+
+Current Vitals:
+{vitals_str}
+
+Latest Medical Report:
+{report_summary if report_summary else "No recent reports"}
+
+Provide recommendations in the following JSON format ONLY (no other text):
+{{
+    "diet": ["recommendation 1", "recommendation 2", "recommendation 3", "recommendation 4"],
+    "activity": ["exercise 1", "exercise 2", "exercise 3", "exercise 4"],
+    "specialists": ["specialist 1", "specialist 2"]
+}}
+
+Guidelines:
+- Tailor diet recommendations to the patient's age and health conditions
+- Suggest age-appropriate exercises (gentle for elderly, more active for younger)
+- Recommend specialists based on any concerning vitals or report findings
+- Keep each recommendation concise (under 100 characters)
+- If no concerns, suggest General Physician for annual check-up
+- Always include a hydration recommendation in diet
+"""
+            
+            model = genai.GenerativeModel('gemini-2.5-flash')
+            response = model.generate_content(prompt)
+            
+            # Parse AI response
+            import json
+            import re
+            
+            response_text = response.text.strip()
+            # Extract JSON from response
+            json_match = re.search(r'\{[\s\S]*\}', response_text)
+            if json_match:
+                ai_recommendations = json.loads(json_match.group())
+                
+                return {
+                    "diet": ai_recommendations.get("diet", []),
+                    "activity": ai_recommendations.get("activity", []),
+                    "specialists": ai_recommendations.get("specialists", ["General Physician (Annual check-up)"]),
+                    "disclaimer": "These AI-generated suggestions are personalized based on your recorded data and are for informational purposes only. Always consult a doctor for clinical diagnosis.",
+                    "ai_powered": True
+                }
+        except Exception as e:
+            print(f"AI recommendations failed: {e}")
+            # Fall through to rule-based recommendations
+    
+    # Fallback: Rule-based recommendations (existing logic)
     diet = ["Ensure adequate hydration (8+ glasses of water).", "Include more fiber-rich vegetables in your meals."]
     activity = [
         "Aim for at least 30 minutes of light walking today.",
@@ -210,15 +341,22 @@ def get_recommendations(db: Session = Depends(database.get_db), current_user: mo
     ]
     specialists = []
     
-    # Get latest vitals by category
-    def get_latest_vital(cat):
-        return db.query(models.Vital).filter(
-            models.Vital.user_id == current_user.id,
-            models.Vital.category == cat
-        ).order_by(models.Vital.recorded_at.desc()).first()
-
-    latest_bp = get_latest_vital("BP")
-    latest_glucose = get_latest_vital("Glucose")
+    # Age-based activity adjustments
+    if user_age:
+        if user_age >= 60:
+            activity = [
+                "Light walking for 15-20 minutes twice a day.",
+                "Chair exercises to maintain mobility.",
+                "Gentle stretching for joints and flexibility.",
+                "Deep breathing exercises for relaxation."
+            ]
+        elif user_age >= 40:
+            activity = [
+                "Brisk walking for 30 minutes daily.",
+                "Low-impact exercises like swimming or cycling.",
+                "Strength training 2-3 times per week.",
+                "Yoga or stretching for flexibility."
+            ]
     
     if latest_bp:
         systolic = latest_bp.value_primary
@@ -234,11 +372,11 @@ def get_recommendations(db: Session = Depends(database.get_db), current_user: mo
             diet.append("Prefer whole grains over white rice/bread.")
             specialists.append("Endocrinologist")
 
-    if latest_report:
-        if latest_report.risk_level in ["YELLOW", "RED"]:
-            # Prepend the medical warning instead of overwriting the list
-            activity.insert(0, "Consult your doctor before starting any intense exercise.")
-            
+    # Check the latest (newest) report only
+    if latest_report and latest_report.risk_level in ["YELLOW", "RED"]:
+        activity.insert(0, "Consult your doctor before starting any intense exercise.")
+        
+        if latest_report.summary:
             if "heart" in latest_report.summary.lower() or "cardiac" in latest_report.summary.lower():
                 specialists.append("Cardiologist")
             if "sugar" in latest_report.summary.lower() or "glucose" in latest_report.summary.lower():
@@ -253,7 +391,8 @@ def get_recommendations(db: Session = Depends(database.get_db), current_user: mo
         "diet": diet,
         "activity": activity,
         "specialists": specialists,
-        "disclaimer": "These suggestions are generated based on your recorded data and are for informational purposes only. Consult a doctor for clinical diagnosis."
+        "disclaimer": "These suggestions are generated based on your recorded data and are for informational purposes only. Consult a doctor for clinical diagnosis.",
+        "ai_powered": False
     }
 
 @router.get("/hospitals")

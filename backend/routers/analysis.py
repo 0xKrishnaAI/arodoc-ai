@@ -13,12 +13,9 @@ router = APIRouter(
     tags=["Analysis"]
 )
 
-# Configure Gemini
-genai.configure(api_key=config.settings.GEMINI_API_KEY)
-
 def analyze_medical_text(file_path: str, mime_type: str):
     """
-    Analyzes a medical report (Image/PDF) using Gemini 1.5 Pro.
+    Analyzes a medical report (Image/PDF) using Gemini.
     Returns structured JSON data.
     """
     if not config.settings.GEMINI_API_KEY:
@@ -30,7 +27,10 @@ def analyze_medical_text(file_path: str, mime_type: str):
         }
 
     try:
-        model = genai.GenerativeModel("gemini-flash-latest")  # Using 'latest' which passed our test
+        # Configure Gemini with current API key (runtime, not import-time)
+        genai.configure(api_key=config.settings.GEMINI_API_KEY)
+        
+        model = genai.GenerativeModel("gemini-2.5-flash")
         
         # Upload the file to Gemini
         uploaded_file = genai.upload_file(file_path, mime_type=mime_type)
@@ -71,6 +71,11 @@ def analyze_medical_text(file_path: str, mime_type: str):
 
 @router.post("/upload", response_model=schemas.ReportResponse)
 def upload_report(file: UploadFile = File(...), db: Session = Depends(database.get_db), current_user: models.User = Depends(get_current_user)):
+    # Validate file type
+    ALLOWED_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/jpg"]
+    if file.content_type not in ALLOWED_TYPES:
+        raise HTTPException(status_code=400, detail="Invalid file type. Only PDF and Image files are allowed.")
+
     # Create unique filename
     import uuid
     safe_filename = f"{uuid.uuid4()}_{file.filename}"

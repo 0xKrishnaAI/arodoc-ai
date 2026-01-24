@@ -1,20 +1,20 @@
 import { useState } from 'react';
-import { Upload, FileText, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Upload, FileText, Loader2, CheckCircle, X, Image } from 'lucide-react';
 import axios from 'axios';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const FileUpload = ({ onUploadSuccess }) => {
-    const [dragActive, setDragActive] = useState(false);
     const [file, setFile] = useState(null);
+    const [preview, setPreview] = useState(null);
     const [uploading, setUploading] = useState(false);
-    const [error, setError] = useState('');
+    const [dragActive, setDragActive] = useState(false);
 
     const handleDrag = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (e.type === "dragenter" || e.type === "dragover") {
+        if (e.type === 'dragenter' || e.type === 'dragover') {
             setDragActive(true);
-        } else if (e.type === "dragleave") {
+        } else if (e.type === 'dragleave') {
             setDragActive(false);
         }
     };
@@ -23,96 +23,160 @@ const FileUpload = ({ onUploadSuccess }) => {
         e.preventDefault();
         e.stopPropagation();
         setDragActive(false);
+
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-            setFile(e.dataTransfer.files[0]);
-            setError('');
+            handleFile(e.dataTransfer.files[0]);
         }
     };
 
-    const handleChange = (e) => {
-        e.preventDefault();
-        if (e.target.files && e.target.files[0]) {
-            setFile(e.target.files[0]);
-            setError('');
+    const handleFile = (selectedFile) => {
+        setFile(selectedFile);
+
+        if (selectedFile.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => setPreview(e.target.result);
+            reader.readAsDataURL(selectedFile);
+        } else {
+            setPreview(null);
         }
+    };
+
+    const handleFileChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            handleFile(e.target.files[0]);
+        }
+    };
+
+    const clearFile = () => {
+        setFile(null);
+        setPreview(null);
     };
 
     const handleUpload = async () => {
         if (!file) return;
 
         setUploading(true);
-        setError('');
-        const formData = new FormData();
-        formData.append("file", file);
-
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('/api/v1/analysis/upload', formData, {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const res = await axios.post('/api/v1/analysis/upload', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             });
-            onUploadSuccess(response.data);
+
+            onUploadSuccess(res.data);
             setFile(null);
+            setPreview(null);
         } catch (err) {
             console.error("Upload failed", err);
-            setError('Upload failed. Please try again. (Ensure you are logged in)');
+            alert("Failed to upload file. Please try again.");
         } finally {
             setUploading(false);
         }
     };
 
     return (
-        <div className="w-full">
-            <label htmlFor="dropzone-file">
-                <motion.div
-                    className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors ${dragActive ? 'border-primary bg-blue-50' : 'border-gray-300'}`}
-                    onDragEnter={handleDrag}
-                    onDragLeave={handleDrag}
-                    onDragOver={handleDrag}
-                    onDrop={handleDrop}
-                    initial={{ opacity: 0, y: 20 }}
+        <div className="space-y-4">
+            {/* Drop Zone */}
+            <div
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+                className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${dragActive
+                        ? 'border-primary bg-primary-50 scale-[1.02]'
+                        : file
+                            ? 'border-emerald-300 bg-emerald-50'
+                            : 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100'
+                    }`}
+            >
+                <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    disabled={uploading}
+                />
+
+                <AnimatePresence mode="wait">
+                    {file ? (
+                        <motion.div
+                            key="file"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="space-y-3"
+                        >
+                            {preview ? (
+                                <div className="relative w-20 h-20 mx-auto rounded-xl overflow-hidden border border-slate-200 shadow-soft">
+                                    <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+                                </div>
+                            ) : (
+                                <div className="w-16 h-16 bg-primary-50 rounded-xl flex items-center justify-center mx-auto border border-primary-100">
+                                    <FileText className="w-8 h-8 text-primary" />
+                                </div>
+                            )}
+                            <div className="flex items-center justify-center gap-2">
+                                <CheckCircle className="w-4 h-4 text-emerald-500" />
+                                <p className="text-sm font-medium text-slate-700 truncate max-w-[200px]">{file.name}</p>
+                            </div>
+                            <button
+                                onClick={(e) => { e.preventDefault(); clearFile(); }}
+                                className="text-xs text-slate-500 hover:text-red-500 transition-colors inline-flex items-center gap-1"
+                            >
+                                <X className="w-3 h-3" /> Remove
+                            </button>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="empty"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="space-y-3"
+                        >
+                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center mx-auto transition-colors duration-300 ${dragActive ? 'bg-primary-100 text-primary' : 'bg-slate-100 text-slate-400'
+                                }`}>
+                                <Upload className="w-7 h-7" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-slate-700">
+                                    Drop your file here, or <span className="text-primary">browse</span>
+                                </p>
+                                <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG up to 10MB</p>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+
+            {/* Upload Button */}
+            {file && (
+                <motion.button
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
+                    onClick={handleUpload}
+                    disabled={uploading}
+                    className="w-full btn-primary py-3 disabled:opacity-60"
                 >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        {file ? (
-                            <>
-                                <FileText className="w-10 h-10 mb-3 text-primary" />
-                                <p className="mb-2 text-sm text-gray-500 font-semibold">{file.name}</p>
-                                <p className="text-xs text-gray-500">{(file.size / 1024).toFixed(2)} KB</p>
-                            </>
-                        ) : (
-                            <>
-                                <Upload className="w-10 h-10 mb-3 text-gray-400" />
-                                <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p className="text-xs text-gray-500">PDF, PNG, JPG (MAX. 10MB)</p>
-                            </>
-                        )}
-                    </div>
-                </motion.div>
-            </label>
-            <input id="dropzone-file" type="file" className="hidden" onChange={handleChange} accept="image/*,application/pdf" />
-
-            {error && <div className="mt-2 text-sm text-red-500 flex items-center gap-1"><AlertCircle size={14} />{error}</div>}
-
-            {
-                file && (
-                    <button
-                        onClick={handleUpload}
-                        disabled={uploading}
-                        className="mt-4 w-full px-4 py-2 text-white bg-primary rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium flex items-center justify-center gap-2"
-                    >
-                        {uploading ? (
-                            <>
-                                <Loader2 className="w-5 h-5 animate-spin" />
-                                Analyzing with Gemini AI...
-                            </>
-                        ) : 'Analyze Report'}
-                    </button>
-                )
-            }
-        </div >
+                    {uploading ? (
+                        <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            Analyzing...
+                        </>
+                    ) : (
+                        <>
+                            <Upload className="w-5 h-5" />
+                            Upload & Analyze
+                        </>
+                    )}
+                </motion.button>
+            )}
+        </div>
     );
 };
 

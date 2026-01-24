@@ -1,21 +1,28 @@
 from pydantic_settings import BaseSettings
 from typing import Optional
 import os
+from pathlib import Path
+
+# Get the directory where config.py is located (backend folder)
+BASE_DIR = Path(__file__).resolve().parent
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Arodoc AI"
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./arodoc.db")
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "dev-secret-key-change-in-production")
-    GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY")
+    DATABASE_URL: str = "sqlite:///./arodoc.db"
+    SECRET_KEY: str = "dev-secret-key-change-in-production"
+    GEMINI_API_KEY: Optional[str] = None
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     # Twilio SMS Configuration (Optional)
-    TWILIO_ACCOUNT_SID: Optional[str] = os.getenv("TWILIO_ACCOUNT_SID")
-    TWILIO_AUTH_TOKEN: Optional[str] = os.getenv("TWILIO_AUTH_TOKEN")
-    TWILIO_PHONE_NUMBER: Optional[str] = os.getenv("TWILIO_PHONE_NUMBER")
+    TWILIO_ACCOUNT_SID: Optional[str] = None
+    TWILIO_AUTH_TOKEN: Optional[str] = None
+    TWILIO_PHONE_NUMBER: Optional[str] = None
 
     class Config:
-        env_file = ".env"
+        env_file = str(BASE_DIR / ".env")
+        env_file_encoding = 'utf-8'
+        extra = 'ignore'
 
 settings = Settings()
+

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
-import { Search, MapPin, Phone, Star, Building2, User, ArrowRight, Navigation, Crosshair } from 'lucide-react';
+import { Search, MapPin, Phone, Star, Building2, User, Navigation, Crosshair, Loader2, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const HospitalLocator = () => {
@@ -35,7 +35,6 @@ const HospitalLocator = () => {
         if (initialQuery) {
             fetchFacilities(initialQuery);
         } else {
-            // Load initial suggestions if no query
             fetchFacilities('');
         }
     }, [initialQuery]);
@@ -58,12 +57,11 @@ const HospitalLocator = () => {
             (position) => {
                 const { latitude, longitude } = position.coords;
                 setUserLocation({ lat: latitude, lng: longitude });
-                // Simulate a "local" search
                 setQuery("Nearby Hospitals");
-                fetchFacilities(''); // In a real app, pass lat/lng here
+                fetchFacilities('');
             },
             () => {
-                setLocationError("Unable to retrieve your location. Please check browser permissions or search by specific City/Hospital name instead.");
+                setLocationError("Unable to retrieve your location. Please check browser permissions.");
                 setLoading(false);
             }
         );
@@ -73,50 +71,56 @@ const HospitalLocator = () => {
         if (userLocation) {
             window.open(`https://www.google.com/maps/search/hospitals/@${userLocation.lat},${userLocation.lng},15z`, '_blank');
         } else {
-            // Fallback to general search
             window.open(`https://www.google.com/maps/search/hospitals`, '_blank');
         }
     };
 
     return (
-        <div className="min-h-screen bg-background pb-32 lg:pb-12 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-background to-background">
+        <div className="min-h-screen bg-background pb-32 lg:pb-12 gradient-calm">
             <Navbar />
-            <div className="max-w-5xl mx-auto px-6 py-8 pt-28 lg:pt-12">
-                <header className="mb-10 text-center">
-                    <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-3 tracking-tight">Nearby Hospitals</h1>
-                    <p className="text-slate-500 text-xl font-medium">Find the best care in your area instantly.</p>
-                </header>
+            <div className="max-w-5xl mx-auto px-6 py-8 pt-28 lg:pt-32">
+                {/* Header */}
+                <motion.header
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-10 text-center"
+                >
+                    <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-5 text-blue-500 border border-blue-100">
+                        <MapPin className="w-7 h-7" />
+                    </div>
+                    <h1 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-2">Nearby Hospitals</h1>
+                    <p className="text-slate-500 text-lg">Find the best care in your area instantly.</p>
+                </motion.header>
 
-                {/* Search Bar & Location */}
-                <div className="max-w-2xl mx-auto mb-12 space-y-4">
-                    <form onSubmit={handleSearch} className="relative group z-10">
-                        <div className="absolute inset-0 bg-primary/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                        <div className="relative bg-white rounded-2xl shadow-xl shadow-slate-200/50 flex items-center p-2 border border-slate-100">
+                {/* Search Section */}
+                <div className="max-w-2xl mx-auto mb-10 space-y-4">
+                    <form onSubmit={handleSearch} className="relative">
+                        <div className="bg-white rounded-2xl shadow-soft flex items-center p-2 border border-slate-100 transition-all duration-300 focus-within:shadow-soft-lg focus-within:border-primary-200">
                             <div className="pl-4">
-                                <Search className="text-slate-400 w-6 h-6" />
+                                <Search className="text-slate-400 w-5 h-5" />
                             </div>
                             <input
                                 type="text"
                                 placeholder="Search by name, specialty, or type..."
-                                className="w-full pl-4 pr-4 py-4 bg-transparent text-lg focus:outline-none text-slate-900 placeholder:text-slate-400"
+                                className="w-full pl-4 pr-4 py-3 bg-transparent text-base focus:outline-none text-slate-700 placeholder:text-slate-400"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                             />
                             <button
                                 type="submit"
-                                className="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-primary-700 transition shadow-lg shadow-primary/20 shrink-0"
+                                className="btn-primary px-6 py-2.5 text-sm shrink-0"
                             >
                                 Search
                             </button>
                         </div>
                     </form>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <button
                             onClick={handleUseLocation}
-                            className="flex items-center gap-2 text-slate-600 font-bold hover:text-primary transition-colors py-2"
+                            className="flex items-center gap-2 text-slate-600 font-medium hover:text-primary transition-colors py-2"
                         >
-                            <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                            <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 border border-blue-100">
                                 <Crosshair className="w-4 h-4" />
                             </div>
                             Use My Location
@@ -126,87 +130,79 @@ const HospitalLocator = () => {
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 onClick={openGoogleMaps}
-                                className="flex items-center gap-2 text-green-600 font-bold hover:text-green-700 transition-colors py-2"
+                                className="flex items-center gap-2 text-emerald-600 font-medium hover:text-emerald-700 transition-colors py-2"
                             >
-                                <MapPin className="w-4 h-4 fill-green-600 text-green-600" />
+                                <ExternalLink className="w-4 h-4" />
                                 View Real Map Results
                             </motion.button>
                         )}
                     </div>
 
                     {locationError && (
-                        <div className="text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl text-sm">
+                        <div className="text-red-600 font-medium text-center bg-red-50 p-3 rounded-xl text-sm border border-red-100">
                             {locationError}
                         </div>
                     )}
                 </div>
 
-                {/* Results Grid */}
+                {/* Results */}
                 {loading ? (
-                    <div className="text-center py-20">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-primary mx-auto mb-6"></div>
-                        <p className="text-slate-500 text-lg font-medium">Scanning nearby area...</p>
+                    <div className="text-center py-16">
+                        <Loader2 className="w-10 h-10 text-primary animate-spin mx-auto mb-4" />
+                        <p className="text-slate-500 font-medium">Scanning nearby area...</p>
                     </div>
                 ) : (
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid md:grid-cols-2 gap-5">
                         {results.length === 0 ? (
-                            <div className="md:col-span-2 text-center py-24 glass-panel">
-                                <Building2 className="w-20 h-20 text-slate-200 mx-auto mb-6" />
-                                <h3 className="text-2xl font-bold text-slate-800 mb-2">No facilities found</h3>
-                                <p className="text-slate-500 text-lg">Try searching manually or using your location.</p>
+                            <div className="md:col-span-2 text-center py-16 card border-dashed border-2 border-slate-200">
+                                <Building2 className="w-16 h-16 text-slate-300 mx-auto mb-5" />
+                                <h3 className="text-xl font-bold text-slate-700 mb-2">No facilities found</h3>
+                                <p className="text-slate-500">Try searching manually or using your location.</p>
                             </div>
                         ) : (
                             results.map((facility) => (
                                 <motion.div
                                     layout
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
                                     key={facility.id}
-                                    className="glass-panel p-6 hover:border-primary/30 transition group relative overflow-hidden"
+                                    className="card-interactive p-5 group"
                                 >
-                                    <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-100 transition-opacity">
-                                        <ArrowRight className="w-6 h-6 text-primary -rotate-45" />
-                                    </div>
-
-                                    <div className="flex items-start justify-between mb-6">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-primary shadow-sm border border-slate-100 group-hover:scale-110 transition-transform duration-300">
-                                                {facility.type === 'Hospital' ? <Building2 className="w-7 h-7" /> : <User className="w-7 h-7" />}
-                                            </div>
-                                            <div>
-                                                <h3 className="font-bold text-slate-900 text-xl leading-tight mb-1">{facility.name}</h3>
-                                                <div className="flex items-center gap-2 flex-wrap">
-                                                    <span className="text-xs font-bold text-primary px-2.5 py-1 bg-primary-50 rounded-lg uppercase tracking-wider">
-                                                        {facility.type}
-                                                    </span>
-                                                    <span className="text-sm text-slate-500 font-medium">{facility.specialty}</span>
-                                                </div>
+                                    <div className="flex items-start gap-4 mb-4">
+                                        <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center text-primary border border-primary-100 group-hover:bg-primary group-hover:text-white transition-all duration-300 shrink-0 shadow-sm">
+                                            {facility.type === 'Hospital' ? <Building2 className="w-6 h-6" /> : <User className="w-6 h-6" />}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="font-bold text-slate-800 text-lg leading-tight mb-1 truncate">{facility.name}</h3>
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                <span className="badge-info text-[10px]">{facility.type}</span>
+                                                <span className="text-sm text-slate-500">{facility.specialty}</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="space-y-4">
-                                        <div className="flex items-start gap-3 bg-white/50 p-3 rounded-xl border border-slate-100/50">
-                                            <MapPin className="w-5 h-5 shrink-0 mt-0.5 text-slate-400 group-hover:text-primary transition-colors" />
-                                            <span className="text-slate-600 font-medium">{facility.address}</span>
+                                    <div className="flex items-start gap-2 p-3 bg-slate-50 rounded-xl border border-slate-100 mb-4">
+                                        <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
+                                        <span className="text-sm text-slate-600">{facility.address}</span>
+                                    </div>
+
+                                    <div className="flex items-center justify-between gap-3">
+                                        <div className="flex items-center gap-1.5 badge-warning">
+                                            <Star className="w-3 h-3 fill-amber-500" />
+                                            {facility.rating}
                                         </div>
-
-                                        <div className="flex items-center justify-between gap-4 mt-2">
-                                            <div className="flex items-center gap-1.5 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg font-bold text-sm border border-amber-100">
-                                                <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
-                                                {facility.rating} Rating
-                                            </div>
-
-                                            <div className="flex items-center gap-2">
-                                                <button onClick={openGoogleMaps} className="flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 text-white rounded-lg font-semibold text-sm hover:bg-slate-800 transition">
-                                                    <Navigation className="w-4 h-4" />
-                                                    {userLocation ? 'Navigate' : 'Directions'}
-                                                </button>
-                                                <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary-700 transition shadow-lg shadow-primary/20">
-                                                    <Phone className="w-4 h-4" />
-                                                    Call
-                                                </button>
-                                            </div>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={openGoogleMaps}
+                                                className="btn-secondary px-3 py-2 text-xs"
+                                            >
+                                                <Navigation className="w-3.5 h-3.5" />
+                                                Navigate
+                                            </button>
+                                            <button className="btn-primary px-3 py-2 text-xs">
+                                                <Phone className="w-3.5 h-3.5" />
+                                                Call
+                                            </button>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -215,9 +211,9 @@ const HospitalLocator = () => {
                     </div>
                 )}
 
-                <div className="mt-16 p-6 bg-slate-50/50 rounded-2xl border border-slate-200 text-center max-w-3xl mx-auto backdrop-blur-sm">
-                    <p className="text-slate-500 italic">
-                        "Facility recommendations are provided based on nearby availability. Always confirm appointments before visiting."
+                <div className="mt-12 p-5 bg-slate-50 rounded-xl border border-slate-100 text-center max-w-2xl mx-auto">
+                    <p className="text-slate-500 text-sm italic">
+                        Facility recommendations are provided based on nearby availability. Always confirm appointments before visiting.
                     </p>
                 </div>
             </div>

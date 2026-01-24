@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { AlertTriangle, Phone, CheckCircle } from 'lucide-react';
+import { AlertTriangle, Phone, CheckCircle, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 
 const SOSButton = () => {
     const [status, setStatus] = useState('IDLE'); // IDLE, SENDING, SENT, ERROR
 
-    // Get user's current GPS location
     const getLocation = () => {
         return new Promise((resolve) => {
             if (!navigator.geolocation) {
@@ -38,9 +37,7 @@ const SOSButton = () => {
     const handleSOS = async () => {
         setStatus('SENDING');
         try {
-            // Get real GPS location
             const location = await getLocation();
-
             const token = localStorage.getItem('token');
             const response = await axios.post('/api/v1/emergency/trigger',
                 { location },
@@ -57,45 +54,61 @@ const SOSButton = () => {
         }
     };
 
+    const buttonStyles = {
+        IDLE: 'bg-gradient-to-br from-red-500 to-red-600 border-red-400 shadow-[0_0_40px_rgba(239,68,68,0.4)] hover:shadow-[0_0_60px_rgba(239,68,68,0.6)]',
+        SENDING: 'bg-gradient-to-br from-red-500 to-red-600 border-red-400 shadow-[0_0_50px_rgba(239,68,68,0.5)]',
+        SENT: 'bg-gradient-to-br from-emerald-500 to-emerald-600 border-emerald-400 shadow-[0_0_40px_rgba(16,185,129,0.4)]',
+        ERROR: 'bg-gradient-to-br from-slate-500 to-slate-600 border-slate-400 shadow-[0_0_30px_rgba(100,116,139,0.3)]'
+    };
+
     return (
         <div className="flex flex-col items-center">
-            <motion.button
-                whileTap={{ scale: 0.95 }}
-                animate={status === 'SENDING' ? { scale: [1, 1.1, 1], transition: { repeat: Infinity } } : {}}
-                onClick={handleSOS}
-                disabled={status !== 'IDLE'}
-                className={`w-48 h-48 rounded-full border-8 shadow-2xl flex flex-col items-center justify-center transition-all ${status === 'SENT' ? 'bg-success border-green-600' :
-                    status === 'ERROR' ? 'bg-gray-500 border-gray-600' :
-                        'bg-danger border-red-600 hover:bg-red-600'
-                    } text-white`}
-            >
+            {/* Pulsing ring behind button */}
+            <div className="relative">
                 {status === 'IDLE' && (
                     <>
-                        <AlertTriangle className="w-16 h-16 mb-2" />
-                        <span className="text-2xl font-black tracking-widest">SOS</span>
-                        <span className="text-xs font-medium opacity-80 mt-1">PRESS FOR HELP</span>
+                        <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping" style={{ animationDuration: '2s' }}></div>
+                        <div className="absolute inset-[-8px] rounded-full bg-red-500/10 animate-pulse"></div>
                     </>
                 )}
-                {status === 'SENDING' && (
-                    <>
-                        <Phone className="w-12 h-12 mb-2 animate-pulse" />
-                        <span className="text-lg font-bold">CONTACTING...</span>
-                    </>
-                )}
-                {status === 'SENT' && (
-                    <>
-                        <CheckCircle className="w-16 h-16 mb-2" />
-                        <span className="text-xl font-bold">ALERT SENT</span>
-                    </>
-                )}
-                {status === 'ERROR' && (
-                    <>
-                        <AlertTriangle className="w-12 h-12 mb-2" />
-                        <span className="text-lg font-bold">FAILED</span>
-                    </>
-                )}
-            </motion.button>
-            <p className="mt-6 text-slate-500 text-center text-sm max-w-xs">
+
+                <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    animate={status === 'SENDING' ? { scale: [1, 1.05, 1] } : {}}
+                    transition={status === 'SENDING' ? { repeat: Infinity, duration: 1 } : {}}
+                    onClick={handleSOS}
+                    disabled={status !== 'IDLE'}
+                    className={`relative w-40 h-40 rounded-full border-4 flex flex-col items-center justify-center transition-all duration-500 text-white ${buttonStyles[status]} disabled:cursor-not-allowed`}
+                >
+                    {status === 'IDLE' && (
+                        <>
+                            <AlertTriangle className="w-12 h-12 mb-1" />
+                            <span className="text-2xl font-black tracking-widest">SOS</span>
+                            <span className="text-[10px] font-medium opacity-80 mt-0.5 uppercase tracking-wide">Press for Help</span>
+                        </>
+                    )}
+                    {status === 'SENDING' && (
+                        <>
+                            <Loader2 className="w-10 h-10 mb-2 animate-spin" />
+                            <span className="text-sm font-bold uppercase tracking-wide">Contacting...</span>
+                        </>
+                    )}
+                    {status === 'SENT' && (
+                        <>
+                            <CheckCircle className="w-12 h-12 mb-1" />
+                            <span className="text-lg font-bold">Alert Sent</span>
+                        </>
+                    )}
+                    {status === 'ERROR' && (
+                        <>
+                            <AlertTriangle className="w-10 h-10 mb-1" />
+                            <span className="text-sm font-bold">Failed</span>
+                        </>
+                    )}
+                </motion.button>
+            </div>
+
+            <p className="mt-6 text-slate-500 text-center text-sm max-w-[280px] leading-relaxed">
                 Pressing this button will instantly notify your emergency contacts with your current location.
             </p>
         </div>
