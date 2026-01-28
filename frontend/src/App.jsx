@@ -5,6 +5,7 @@ import Navbar from './components/Navbar'
 import { ArrowRight, Activity, ShieldAlert, CheckCircle, Heart, Zap, Play, Sparkles } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AuthProvider } from './context/AuthContext'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Components & Pages
 import Login from './pages/Login'
@@ -21,6 +22,9 @@ import ProtectedRoute from './components/ProtectedRoute'
 import PublicRoute from './components/PublicRoute'
 import AIChat from './components/AIChat'
 import Landing from './pages/Landing'
+import PrescriptionScan from './pages/PrescriptionScan'
+import MedicineComparison from './pages/MedicineComparison'
+import SOSButton from './components/SOSButton'
 
 // Landing component is now imported from ./pages/Landing
 
@@ -44,6 +48,8 @@ const AnimatedRoutes = () => {
                 <Route path="/analysis" element={<ProtectedRoute><Analysis /></ProtectedRoute>} />
                 <Route path="/recommendations" element={<ProtectedRoute><Recommendations /></ProtectedRoute>} />
                 <Route path="/hospitals" element={<ProtectedRoute><HospitalLocator /></ProtectedRoute>} />
+                <Route path="/scan-prescription" element={<ProtectedRoute><PrescriptionScan /></ProtectedRoute>} />
+                <Route path="/compare-prices" element={<ProtectedRoute><MedicineComparison /></ProtectedRoute>} />
                 <Route path="/emergency" element={<ProtectedRoute><Emergency /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
@@ -59,8 +65,13 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                <AnimatedRoutes />
+                <ErrorBoundary>
+                    <ErrorBoundary>
+                        <AnimatedRoutes />
+                    </ErrorBoundary>
+                </ErrorBoundary>
                 <AIChat />
+                <SOSButton />
             </Router>
         </AuthProvider>
     )

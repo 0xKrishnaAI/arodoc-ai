@@ -21,6 +21,7 @@ class User(Base):
     vitals = orm_relationship("Vital", back_populates="user")
     reports = orm_relationship("Report", back_populates="user")
     emergency_contacts = orm_relationship("EmergencyContact", back_populates="user")
+    medicines = orm_relationship("Medicine", back_populates="user")
 
 class Profile(Base):
     __tablename__ = "profiles"
@@ -86,3 +87,23 @@ class Alert(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = orm_relationship("User")
+
+class Medicine(Base):
+    __tablename__ = "medicines"
+
+    id = Column(String, primary_key=True, default=generate_uuid)
+    user_id = Column(String, ForeignKey("users.id"))
+    name = Column(String, nullable=False)
+    dosage = Column(String) # e.g., "500mg"
+    timing = Column(String) # How often? e.g., "Morning", "Night", "8:00 AM"
+    schedule_time = Column(DateTime) # Next scheduled time
+    status = Column(String, default="Scheduled") # Scheduled, Taken, Escalated, Missed
+    taken_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    user = orm_relationship("User", back_populates="medicines")
+
+# Update User relationship (Outside of User class definition to avoid circular issues if order matters, 
+# but here we can just update the User class or rely on the back_populates in Medicine if User doesn't explicitly list it.
+# However, usually we want it on both sides. Let's add it to User class.)
+

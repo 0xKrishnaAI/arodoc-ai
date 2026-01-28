@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from .routers import auth, health, analysis, emergency, assistant
+from .routers import auth, health, analysis, emergency, assistant, medicines
 from . import models, database
 import os
 
@@ -35,6 +35,7 @@ app.include_router(health.router, prefix="/api/v1")
 app.include_router(analysis.router, prefix="/api/v1")
 app.include_router(emergency.router, prefix="/api/v1")
 app.include_router(assistant.router, prefix="/api/v1")
+app.include_router(medicines.router, prefix="/api/v1")
 
 @app.get("/")
 def read_root():

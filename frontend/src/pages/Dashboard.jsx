@@ -1,18 +1,25 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import VitalsForm from '../components/VitalsForm';
 import EditVitalModal from '../components/EditVitalModal';
 import axios from 'axios';
-import { Activity, FileText, AlertTriangle, CheckCircle2, Heart, TrendingUp, Plus, BookOpen, Shield, Edit2, Trash2, Loader2 } from 'lucide-react';
+import { Activity, FileText, AlertTriangle, CheckCircle2, Heart, TrendingUp, Plus, BookOpen, Shield, Edit2, Trash2, Loader2, Pill, Clock, Bell } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
+import MedicineReminders from '../components/MedicineReminders';
 
 const Dashboard = () => {
+    const navigate = useNavigate();
     const [dashboardData, setDashboardData] = useState(null);
+    const [showReminders, setShowReminders] = useState(false); // New State
     const [loading, setLoading] = useState(true);
     const [showVitalsForm, setShowVitalsForm] = useState(false);
     const [editingVital, setEditingVital] = useState(null);
     const [deletingVital, setDeletingVital] = useState(null);
+    const [medicines, setMedicines] = useState([]);
+    const [simulating, setSimulating] = useState(false);
+    const { token } = useAuth();
 
     useEffect(() => {
         fetchDashboard();
@@ -20,15 +27,45 @@ const Dashboard = () => {
 
     const fetchDashboard = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.get('/api/v1/health/dashboard', {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL || ''}/api/v1/health/dashboard`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setDashboardData(res.data);
+
+            const medRes = await axios.get(`${import.meta.env.VITE_API_URL || ''}/api/v1/medicines/`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setMedicines(medRes.data);
         } catch (err) {
-            console.error("Failed to fetch dashboard", err);
+            console.error("Failed to fetch dashboard data", err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleTakeMedicine = async (id) => {
+        try {
+            await axios.patch(`${import.meta.env.VITE_API_URL || ''}/api/v1/medicines/${id}/status`, { status: "Taken" }, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            fetchDashboard();
+        } catch (err) {
+            console.error("Failed to update medicine", err);
+        }
+    };
+
+    const handleSimulateMissed = async () => {
+        setSimulating(true);
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL || ''}/api/v1/medicines/simulate-missed`, {}, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            alert("Simulation: Missed Dose Escalated! Check Alerts.");
+            fetchDashboard();
+        } catch (err) {
+            console.error("Simulation failed", err);
+        } finally {
+            setSimulating(false);
         }
     };
 
@@ -63,7 +100,6 @@ const Dashboard = () => {
 
         setDeletingVital(vitalId);
         try {
-            const token = localStorage.getItem('token');
             await axios.delete(`/api/v1/health/vitals/${vitalId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -95,6 +131,13 @@ const Dashboard = () => {
     return (
         <div className="min-h-screen bg-background pb-32 lg:pb-12 gradient-calm">
             <Navbar />
+            <MedicineReminders
+                isOpen={showReminders}
+                onClose={() => setShowReminders(false)}
+                medicines={medicines}
+                onTake={handleTakeMedicine}
+                onAdd={() => navigate('/scan-prescription')}
+            />
             <div className="max-w-6xl mx-auto px-6 py-8 pt-28 lg:pt-32">
                 {/* Header */}
                 <motion.header
@@ -367,6 +410,37 @@ const Dashboard = () => {
                         </div>
                     </motion.div>
                 </div>
+
+                {/* Medicine Reminders Trigger Card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.45 }}
+                    className="card p-6 mb-10 cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-emerald-500 group"
+                    onClick={() => setShowReminders(true)}
+                >
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-5">
+                            <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-200 group-hover:scale-110 transition-transform duration-300">
+                                <Bell className="w-7 h-7" />
+                                {medicines.some(m => m.status === 'Scheduled') && (
+                                    <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 border-2 border-white rounded-full"></span>
+                                )}
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">Medicine Reminders</h3>
+                                <p className="text-slate-500 font-medium text-sm">
+                                    {medicines.filter(m => m.status === 'Scheduled').length > 0
+                                        ? `${medicines.filter(m => m.status === 'Scheduled').length} medicines scheduled for today`
+                                        : "No active reminders"}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                            <Clock className="w-5 h-5" />
+                        </div>
+                    </div>
+                </motion.div>
 
                 {/* Help & Support Section */}
                 <motion.div

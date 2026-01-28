@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Activity, ShieldAlert, Home, User, LayoutDashboard, Zap, LogOut, Stethoscope, MapPin } from 'lucide-react';
+import { Activity, ShieldAlert, Home, User, LayoutDashboard, Zap, LogOut, Stethoscope, MapPin, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import LogoutModal from './LogoutModal';
 
@@ -77,6 +77,8 @@ const Navbar = () => {
                                     <NavLink to="/hospitals" icon={MapPin} label="Nearby" active={isActive('/hospitals')} />
                                     <NavLink to="/emergency" icon={ShieldAlert} label="SOS" active={isActive('/emergency')} isEmergency />
                                     <NavLink to="/profile" icon={User} label="Profile" active={isActive('/profile')} />
+                                    <NavLink to="/scan-prescription" icon={Stethoscope} label="Scan Rx" active={isActive('/scan-prescription')} />
+                                    <NavLink to="/compare-prices" icon={ShoppingBag} label="Medicine Vault" active={isActive('/compare-prices')} />
 
                                     <button
                                         onClick={() => setIsLogoutModalOpen(true)}

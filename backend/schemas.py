@@ -92,3 +92,25 @@ class EmergencyContactResponse(EmergencyContactCreate):
 
     class Config:
         from_attributes = True
+
+# Medicines
+class MedicineCreate(BaseModel):
+    name: str
+    dosage: Optional[str] = None
+    timing: Optional[str] = None
+    schedule_time: Optional[datetime] = None
+
+class MedicineUpdateStatus(BaseModel):
+    status: str # Taken, Escalated, Missed
+    taken_at: Optional[datetime] = None
+
+class MedicineResponse(MedicineCreate):
+    id: str
+    user_id: str
+    status: str
+    taken_at: Optional[datetime] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
