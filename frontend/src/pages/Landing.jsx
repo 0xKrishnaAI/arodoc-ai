@@ -82,10 +82,11 @@ const Landing = () => {
                         className="flex flex-col sm:flex-row items-center justify-center gap-4"
                     >
                         <Link
-                            to="/signup"
+                            to="/login"
+                            state={{ demo: true }}
                             className="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-2xl font-semibold text-lg hover:bg-primary-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-soft hover:shadow-glow hover:-translate-y-0.5 active:scale-[0.98]"
                         >
-                            Get Started Free
+                            Get Started / Demo
                             <ArrowRight className="w-5 h-5" />
                         </Link>
                         <Link

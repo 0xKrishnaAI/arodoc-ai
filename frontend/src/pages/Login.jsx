@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 import { LogIn, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
@@ -11,7 +11,16 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation(); // Add hook
     const { login } = useAuth();
+
+    // Auto-fill for demo
+    useEffect(() => {
+        if (location.state?.demo) {
+            setEmail('demo@arodoc.ai');
+            setPassword('demo123');
+        }
+    }, [location.state]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -56,6 +65,22 @@ const Login = () => {
                         </div>
                         <h2 className="text-2xl lg:text-3xl font-bold text-slate-800 mb-2">Welcome Back</h2>
                         <p className="text-slate-500">Sign in to access your health dashboard</p>
+                    </div>
+
+
+                    {/* Demo Account Button */}
+                    <div className="mb-8">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setEmail('demo@arodoc.ai');
+                                setPassword('demo123');
+                            }}
+                            className="w-full flex items-center justify-center gap-2 p-3 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-100 hover:bg-emerald-100 transition-all font-medium text-sm group"
+                        >
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 group-hover:animate-pulse"></span>
+                            Use Demo Account (Judge View)
+                        </button>
                     </div>
 
                     {/* Form */}
