@@ -49,21 +49,21 @@ const MedicineComparison = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 pb-20 transition-colors duration-300">
             <Navbar />
 
             {/* Header / Top Bar */}
-            <div className="bg-white pt-24 pb-6 px-6 shadow-sm">
+            <div className="bg-white dark:bg-slate-900 pt-24 pb-6 px-6 shadow-sm border-b border-gray-100 dark:border-slate-800 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600">
+                        <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                             <ShoppingCart className="w-5 h-5" />
                         </div>
-                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Medicine<span className="text-emerald-500">Vault.</span></h1>
+                        <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Medicine<span className="text-emerald-500">Vault.</span></h1>
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">
+                        <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full text-sm font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
                             <span className="w-4 h-4 rounded-full border border-gray-400 border-t-transparent animate-spin hidden"></span>
                             Orders
                         </button>
@@ -82,14 +82,14 @@ const MedicineComparison = () => {
                             <input
                                 type="text"
                                 placeholder="Search by medicine name, brand, or formula..."
-                                className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                                className="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 dark:text-white dark:placeholder-slate-500 transition-all"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                             />
                         </div>
                         <div className="flex gap-2">
-                            <button className="px-4 py-3.5 bg-white border border-gray-200 rounded-2xl text-gray-700 font-medium hover:bg-gray-50 flex items-center gap-2">
+                            <button className="px-4 py-3.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl text-gray-700 dark:text-slate-300 font-medium hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-2 transition-colors">
                                 <div className="grid grid-cols-2 gap-0.5">
                                     <div className="w-1 h-1 bg-current rounded-full"></div>
                                     <div className="w-1 h-1 bg-current rounded-full"></div>
@@ -97,7 +97,7 @@ const MedicineComparison = () => {
                                     <div className="w-1 h-1 bg-current rounded-full"></div>
                                 </div>
                             </button>
-                            <button className="px-6 py-3.5 bg-white border border-gray-200 rounded-2xl text-gray-700 font-bold hover:bg-gray-50 flex items-center gap-2">
+                            <button className="px-6 py-3.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl text-gray-700 dark:text-slate-300 font-bold hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-2 transition-colors">
                                 <Filter className="w-4 h-4" />
                                 Filters
                             </button>
@@ -110,8 +110,8 @@ const MedicineComparison = () => {
                             <button
                                 key={i}
                                 className={`px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${i === 0
-                                        ? 'bg-emerald-500 text-white shadow-md shadow-emerald-200'
-                                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                    ? 'bg-emerald-500 text-white shadow-md shadow-emerald-200 dark:shadow-none'
+                                    : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700'
                                     }`}
                             >
                                 {cat.toUpperCase()}
@@ -130,7 +130,7 @@ const MedicineComparison = () => {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {results.map((item, idx) => (
-                            <div key={idx} className="bg-white rounded-3xl p-6 border border-gray-100 hover:shadow-xl hover:border-emerald-100 transition-all duration-300 group relative">
+                            <div key={idx} className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-gray-100 dark:border-slate-800 hover:shadow-xl dark:hover:shadow-soft-lg hover:border-emerald-100 dark:hover:border-emerald-900/30 transition-all duration-300 group relative">
                                 {/* Badges */}
                                 <div className="absolute top-6 left-6 flex flex-col gap-2">
                                     {item.rx_required && (
@@ -138,29 +138,29 @@ const MedicineComparison = () => {
                                             RX REQUIRED
                                         </span>
                                     )}
-                                    <span className="px-3 py-1 bg-emerald-100/80 backdrop-blur-sm text-emerald-600 text-[10px] font-bold rounded-full w-fit flex items-center gap-1">
+                                    <span className="px-3 py-1 bg-emerald-100/80 dark:bg-emerald-900/60 backdrop-blur-sm text-emerald-600 dark:text-emerald-400 text-[10px] font-bold rounded-full w-fit flex items-center gap-1">
                                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                         IN STOCK
                                     </span>
                                 </div>
 
                                 {/* Image Placeholder */}
-                                <div className="h-40 bg-gray-50 rounded-2xl mb-6 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-                                    <div className="w-16 h-16 border-2 border-gray-200 rounded-xl flex items-center justify-center text-gray-300">
+                                <div className="h-40 bg-gray-50 dark:bg-slate-800 rounded-2xl mb-6 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                                    <div className="w-16 h-16 border-2 border-gray-200 dark:border-slate-700 rounded-xl flex items-center justify-center text-gray-300 dark:text-slate-600">
                                         <ShoppingCart className="w-8 h-8" />
                                     </div>
                                 </div>
 
                                 {/* Content */}
                                 <div>
-                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{item.vendor_name}</p>
-                                    <h3 className="text-lg font-bold text-slate-800 mb-1 leading-tight">{item.name || item.vendor_name}</h3>
-                                    <p className="text-xs text-gray-500 mb-4">{item.type || "General Health"} • {item.delivery_time || "2 hrs"}</p>
+                                    <p className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">{item.vendor_name}</p>
+                                    <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1 leading-tight">{item.name || item.vendor_name}</h3>
+                                    <p className="text-xs text-gray-500 dark:text-slate-400 mb-4">{item.type || "General Health"} • {item.delivery_time || "2 hrs"}</p>
 
                                     <div className="flex items-center justify-between mt-4">
                                         <div>
                                             <p className="text-[10px] font-semibold text-gray-400 uppercase">Total Price</p>
-                                            <p className="text-2xl font-bold text-slate-900">₹{item.price}</p>
+                                            <p className="text-2xl font-bold text-slate-900 dark:text-emerald-400">₹{item.price}</p>
                                         </div>
                                         <button className="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center hover:bg-emerald-500 hover:scale-110 hover:shadow-lg transition-all duration-300">
                                             <Plus className="w-5 h-5" />

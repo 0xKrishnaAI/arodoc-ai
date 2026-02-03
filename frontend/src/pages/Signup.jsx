@@ -34,7 +34,7 @@ const Signup = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background pb-24 gradient-hero">
+        <div className="min-h-screen bg-background pb-24 gradient-hero dark:bg-slate-950 dark:bg-none">
             <Navbar />
 
             {/* Enhanced background effects */}
@@ -48,26 +48,26 @@ const Signup = () => {
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-                    className="glass-panel p-8 md:p-10 shadow-glass-lg border-white/50 backdrop-blur-2xl"
+                    className="glass-panel p-8 md:p-10 shadow-glass-lg border-white/50 dark:border-white/10 backdrop-blur-2xl dark:bg-slate-900/60"
                 >
                     {/* Header */}
                     <div className="text-center mb-8">
                         <div className="w-16 h-16 bg-gradient-to-br from-accent/10 to-accent/20 rounded-2xl flex items-center justify-center text-accent mx-auto mb-6 border border-accent/20 shadow-soft">
                             <UserPlus className="w-7 h-7" />
                         </div>
-                        <h2 className="text-2xl lg:text-3xl font-bold text-slate-800 mb-2">Create Account</h2>
-                        <p className="text-slate-500">Join Arodoc AI for smarter health monitoring</p>
+                        <h2 className="text-2xl lg:text-3xl font-bold text-slate-800 dark:text-white mb-2">Create Account</h2>
+                        <p className="text-slate-500 dark:text-slate-400">Join Arodoc AI for smarter health monitoring</p>
                     </div>
 
                     {/* Form */}
                     <form onSubmit={handleSignup} className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-slate-600 ml-1">Full Name</label>
+                            <label className="text-sm font-semibold text-slate-600 dark:text-slate-300 ml-1">Full Name</label>
                             <div className="relative">
                                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                                 <input
                                     name="full_name"
-                                    className="input-field pl-12"
+                                    className="input-field pl-12 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-500"
                                     placeholder="John Doe"
                                     value={formData.full_name}
                                     onChange={handleChange}
@@ -77,13 +77,13 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-slate-600 ml-1">Date of Birth</label>
+                            <label className="text-sm font-semibold text-slate-600 dark:text-slate-300 ml-1">Date of Birth</label>
                             <div className="relative">
                                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                                 <input
                                     name="dob"
                                     type="date"
-                                    className="input-field pl-12"
+                                    className="input-field pl-12 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-500"
                                     value={formData.dob}
                                     onChange={handleChange}
                                     required
@@ -92,13 +92,13 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-slate-600 ml-1">Email Address</label>
+                            <label className="text-sm font-semibold text-slate-600 dark:text-slate-300 ml-1">Email Address</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                                 <input
                                     name="email"
                                     type="email"
-                                    className="input-field pl-12"
+                                    className="input-field pl-12 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-500"
                                     placeholder="name@example.com"
                                     value={formData.email}
                                     onChange={handleChange}
@@ -108,13 +108,13 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-slate-600 ml-1">Password</label>
+                            <label className="text-sm font-semibold text-slate-600 dark:text-slate-300 ml-1">Password</label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                                 <input
                                     name="password"
                                     type="password"
-                                    className="input-field pl-12"
+                                    className="input-field pl-12 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-500"
                                     placeholder="Create a strong password"
                                     value={formData.password}
                                     onChange={handleChange}
@@ -143,7 +143,7 @@ const Signup = () => {
 
                     {/* Footer */}
                     <div className="mt-8 text-center">
-                        <p className="text-slate-500">
+                        <p className="text-slate-500 dark:text-slate-400">
                             Already have an account?{' '}
                             <Link to="/login" className="text-primary font-semibold hover:underline underline-offset-2 transition-colors">
                                 Log In

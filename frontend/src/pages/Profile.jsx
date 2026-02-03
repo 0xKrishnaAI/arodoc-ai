@@ -57,23 +57,23 @@ const Profile = () => {
 
     const getStatusStyles = (status) => {
         switch (status) {
-            case 'GREEN': return 'bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200/60 text-emerald-800';
-            case 'YELLOW': return 'bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200/60 text-amber-800';
-            case 'RED': return 'bg-gradient-to-br from-red-50 to-rose-50 border-red-200/60 text-red-800';
-            default: return 'bg-slate-50 border-slate-200 text-slate-800';
+            case 'GREEN': return 'bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200/60 text-emerald-800 dark:from-emerald-900/20 dark:to-teal-900/20 dark:border-emerald-800/30 dark:text-emerald-400';
+            case 'YELLOW': return 'bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200/60 text-amber-800 dark:from-amber-900/20 dark:to-orange-900/20 dark:border-amber-800/30 dark:text-amber-400';
+            case 'RED': return 'bg-gradient-to-br from-red-50 to-rose-50 border-red-200/60 text-red-800 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-800/30 dark:text-red-400';
+            default: return 'bg-slate-50 border-slate-200 text-slate-800 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200';
         }
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-background gradient-calm">
+            <div className="min-h-screen bg-background gradient-calm dark:bg-slate-950 dark:bg-none">
                 <Navbar />
                 <div className="flex items-center justify-center h-screen">
                     <div className="text-center">
-                        <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div className="w-16 h-16 bg-primary-50 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
                             <Loader2 className="w-8 h-8 text-primary animate-spin" />
                         </div>
-                        <p className="text-slate-500 text-lg font-medium">Loading your profile...</p>
+                        <p className="text-slate-500 dark:text-slate-400 text-lg font-medium">Loading your profile...</p>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@ const Profile = () => {
     }
 
     return (
-        <div className="min-h-screen bg-background pb-24 gradient-calm">
+        <div className="min-h-screen bg-background pb-24 gradient-calm dark:bg-slate-950 dark:bg-none">
             <Navbar />
 
             <div className="max-w-5xl mx-auto px-6 pt-28 lg:pt-40">
@@ -92,8 +92,8 @@ const Profile = () => {
                     className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6"
                 >
                     <div>
-                        <h1 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-2">Your Profile</h1>
-                        <p className="text-slate-500 text-lg">Manage your account and personal preferences</p>
+                        <h1 className="text-3xl lg:text-4xl font-bold text-slate-800 dark:text-white mb-2">Your Profile</h1>
+                        <p className="text-slate-500 dark:text-slate-400 text-lg">Manage your account and personal preferences</p>
                     </div>
                     <button
                         onClick={handleLogout}
@@ -112,8 +112,8 @@ const Profile = () => {
                         transition={{ delay: 0.1 }}
                         className="md:col-span-2 space-y-6"
                     >
-                        <div className="card p-6 lg:p-8 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl -z-10 transform translate-x-1/2 -translate-y-1/2"></div>
+                        <div className="card p-6 lg:p-8 relative overflow-hidden dark:bg-slate-900 dark:border-slate-800">
+                            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 dark:bg-primary/10 rounded-full blur-3xl -z-10 transform translate-x-1/2 -translate-y-1/2"></div>
 
                             {/* Profile Header */}
                             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8 text-center sm:text-left">
@@ -124,8 +124,8 @@ const Profile = () => {
                                     <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-emerald-500 border-4 border-white rounded-full"></div>
                                 </div>
                                 <div className="pt-1">
-                                    <h2 className="text-2xl font-bold text-slate-800 mb-1">{userData?.full_name}</h2>
-                                    <p className="text-slate-500 font-medium capitalize flex items-center justify-center sm:justify-start gap-2">
+                                    <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-1">{userData?.full_name}</h2>
+                                    <p className="text-slate-500 dark:text-slate-400 font-medium capitalize flex items-center justify-center sm:justify-start gap-2">
                                         <ShieldCheck className="w-4 h-4 text-primary" />
                                         {userData?.role || 'Patient'} Account
                                     </p>
@@ -134,35 +134,35 @@ const Profile = () => {
 
                             {/* Info Cards */}
                             <div className="grid gap-4">
-                                <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100 transition-all duration-300 hover:border-primary-200 hover:bg-white">
-                                    <div className="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center text-blue-500 border border-blue-100 shrink-0">
+                                <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 transition-all duration-300 hover:border-primary-200 dark:hover:border-primary-700 hover:bg-white dark:hover:bg-slate-800">
+                                    <div className="w-11 h-11 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center text-blue-500 border border-blue-100 dark:border-blue-900/30 shrink-0">
                                         <Mail className="w-5 h-5" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-0.5">Email Address</p>
-                                        <p className="font-semibold text-slate-800 truncate">{userData?.email}</p>
+                                        <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider mb-0.5">Email Address</p>
+                                        <p className="font-semibold text-slate-800 dark:text-slate-200 truncate">{userData?.email}</p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100 transition-all duration-300 hover:border-primary-200 hover:bg-white">
-                                    <div className="w-11 h-11 bg-orange-50 rounded-xl flex items-center justify-center text-orange-500 border border-orange-100 shrink-0">
+                                <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 transition-all duration-300 hover:border-primary-200 dark:hover:border-primary-700 hover:bg-white dark:hover:bg-slate-800">
+                                    <div className="w-11 h-11 bg-orange-50 dark:bg-orange-900/20 rounded-xl flex items-center justify-center text-orange-500 border border-orange-100 dark:border-orange-900/30 shrink-0">
                                         <Calendar className="w-5 h-5" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-0.5">Date of Birth</p>
-                                        <p className="font-semibold text-slate-800">
+                                        <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider mb-0.5">Date of Birth</p>
+                                        <p className="font-semibold text-slate-800 dark:text-slate-200">
                                             {userData?.profile?.dob ? new Date(userData.profile.dob).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : "Not provided"}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100 transition-all duration-300 hover:border-primary-200 hover:bg-white">
-                                    <div className="w-11 h-11 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-500 border border-emerald-100 shrink-0">
+                                <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 transition-all duration-300 hover:border-primary-200 dark:hover:border-primary-700 hover:bg-white dark:hover:bg-slate-800">
+                                    <div className="w-11 h-11 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex items-center justify-center text-emerald-500 border border-emerald-100 dark:border-emerald-900/30 shrink-0">
                                         <Activity className="w-5 h-5" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-0.5">Current Age</p>
-                                        <p className="font-semibold text-slate-800">{calculateAge(userData?.profile?.dob)} Years Old</p>
+                                        <p className="text-xs text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider mb-0.5">Current Age</p>
+                                        <p className="font-semibold text-slate-800 dark:text-slate-200">{calculateAge(userData?.profile?.dob)} Years Old</p>
                                     </div>
                                 </div>
                             </div>
@@ -193,7 +193,7 @@ const Profile = () => {
                                     {healthData?.status_message}
                                 </p>
 
-                                <div className="space-y-2 pt-5 border-t border-black/5">
+                                <div className="space-y-2 pt-5 border-t border-black/5 dark:border-white/10">
                                     <div className="flex items-center justify-between text-sm">
                                         <span className="font-medium opacity-70">Verification</span>
                                         <span className="font-semibold flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Verified</span>

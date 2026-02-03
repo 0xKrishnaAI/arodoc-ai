@@ -43,7 +43,7 @@ const Recommendations = () => {
     }
 
     return (
-        <div className="min-h-screen bg-background pb-24 gradient-calm">
+        <div className="min-h-screen bg-background pb-24 gradient-calm dark:bg-slate-950 dark:bg-none">
             <Navbar />
 
             <div className="max-w-5xl mx-auto px-6 pt-28 lg:pt-40">
@@ -54,16 +54,16 @@ const Recommendations = () => {
                     className="mb-10 text-center max-w-2xl mx-auto"
                 >
                     <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full font-semibold text-sm mb-5 border ${data?.ai_powered
-                        ? 'bg-violet-50 text-violet-600 border-violet-100'
-                        : 'bg-primary-50 text-primary-600 border-primary-100'
+                        ? 'bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 border-violet-100 dark:border-violet-900/30'
+                        : 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 border-primary-100 dark:border-primary-900/30'
                         }`}>
                         <Sparkles className="w-4 h-4" />
                         {data?.ai_powered ? 'AI Personalized Insights' : 'Smart Health Insights'}
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4 leading-tight">
+                    <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-4 leading-tight">
                         {data?.ai_powered ? 'Personalized ' : 'Smart '}<span className="text-gradient">Recommendations</span>
                     </h1>
-                    <p className="text-slate-500 text-lg leading-relaxed">
+                    <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed">
                         {data?.ai_powered
                             ? 'AI-generated dietary, activity, and medical suggestions tailored to your age, vitals, and health reports.'
                             : 'Dietary, activity, and medical suggestions based on your health profile.'}
@@ -82,26 +82,26 @@ const Recommendations = () => {
                     >
                         <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-100/30 rounded-full blur-3xl -z-10 transform translate-x-1/2 -translate-y-1/2"></div>
 
-                        <div className="flex flex-col md:flex-row md:items-center gap-5 mb-6 border-b border-slate-100 pb-5">
-                            <div className="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-500 border border-emerald-100">
+                        <div className="flex flex-col md:flex-row md:items-center gap-5 mb-6 border-b border-slate-100 dark:border-slate-800 pb-5">
+                            <div className="w-14 h-14 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl flex items-center justify-center text-emerald-500 border border-emerald-100 dark:border-emerald-900/30">
                                 <Utensils className="w-7 h-7" />
                             </div>
                             <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-1">
-                                    <h2 className="text-xl font-bold text-slate-800">Dietary Suggestions</h2>
+                                    <h2 className="text-xl font-bold text-slate-800 dark:text-white">Dietary Suggestions</h2>
                                     <span className="badge-success text-[10px]">Beta</span>
                                 </div>
-                                <p className="text-slate-500 text-sm">Nutrition plans to optimize your vital stats.</p>
+                                <p className="text-slate-500 dark:text-slate-400 text-sm">Nutrition plans to optimize your vital stats.</p>
                             </div>
                         </div>
 
                         <ul className="grid md:grid-cols-2 gap-3">
                             {data?.diet.length > 0 ? data.diet.map((item, idx) => (
-                                <li key={idx} className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-emerald-200 hover:bg-white transition-all duration-300">
+                                <li key={idx} className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-700/50 hover:bg-white dark:hover:bg-slate-800 transition-all duration-300">
                                     <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center text-white shrink-0 mt-0.5">
                                         <ArrowRight className="w-3 h-3" />
                                     </div>
-                                    <span className="text-slate-700 leading-relaxed">{item}</span>
+                                    <span className="text-slate-700 dark:text-slate-300 leading-relaxed">{item}</span>
                                 </li>
                             )) : (
                                 <div className="col-span-2 text-center py-8 text-slate-400 italic bg-slate-50 rounded-xl border border-dashed border-slate-200">
@@ -120,23 +120,23 @@ const Recommendations = () => {
                     >
                         <div className="absolute top-0 right-0 w-48 h-48 bg-orange-100/30 rounded-full blur-3xl -z-10 transform translate-x-1/2 -translate-y-1/2"></div>
 
-                        <div className="flex flex-col md:flex-row md:items-center gap-5 mb-6 border-b border-slate-100 pb-5">
-                            <div className="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center text-orange-500 border border-orange-100">
+                        <div className="flex flex-col md:flex-row md:items-center gap-5 mb-6 border-b border-slate-100 dark:border-slate-800 pb-5">
+                            <div className="w-14 h-14 bg-orange-50 dark:bg-orange-900/20 rounded-xl flex items-center justify-center text-orange-500 border border-orange-100 dark:border-orange-900/30">
                                 <Activity className="w-7 h-7" />
                             </div>
                             <div className="flex-1">
-                                <h2 className="text-xl font-bold text-slate-800 mb-1">Daily Activity & Lifestyle</h2>
-                                <p className="text-slate-500 text-sm">Simple habits to improve your well-being.</p>
+                                <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-1">Daily Activity & Lifestyle</h2>
+                                <p className="text-slate-500 dark:text-slate-400 text-sm">Simple habits to improve your well-being.</p>
                             </div>
                         </div>
 
                         <ul className="grid md:grid-cols-2 gap-3">
                             {data?.activity.length > 0 ? data.activity.map((item, idx) => (
-                                <li key={idx} className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-orange-200 hover:bg-white transition-all duration-300">
+                                <li key={idx} className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-orange-200 dark:hover:border-orange-700/50 hover:bg-white dark:hover:bg-slate-800 transition-all duration-300">
                                     <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white shrink-0 mt-0.5">
                                         <ArrowRight className="w-3 h-3" />
                                     </div>
-                                    <span className="text-slate-700 leading-relaxed">{item}</span>
+                                    <span className="text-slate-700 dark:text-slate-300 leading-relaxed">{item}</span>
                                 </li>
                             )) : (
                                 <div className="col-span-2 text-center py-8 text-slate-400 italic bg-slate-50 rounded-xl border border-dashed border-slate-200">
@@ -155,13 +155,13 @@ const Recommendations = () => {
                     >
                         <div className="absolute top-0 right-0 w-48 h-48 bg-violet-100/30 rounded-full blur-3xl -z-10 transform translate-x-1/2 -translate-y-1/2"></div>
 
-                        <div className="flex flex-col md:flex-row md:items-center gap-5 mb-6 border-b border-slate-100 pb-5">
-                            <div className="w-14 h-14 bg-violet-50 rounded-xl flex items-center justify-center text-violet-500 border border-violet-100">
+                        <div className="flex flex-col md:flex-row md:items-center gap-5 mb-6 border-b border-slate-100 dark:border-slate-800 pb-5">
+                            <div className="w-14 h-14 bg-violet-50 dark:bg-violet-900/20 rounded-xl flex items-center justify-center text-violet-500 border border-violet-100 dark:border-violet-900/30">
                                 <UserPlus className="w-7 h-7" />
                             </div>
                             <div className="flex-1">
-                                <h2 className="text-xl font-bold text-slate-800 mb-1">Recommended Specialists</h2>
-                                <p className="text-slate-500 text-sm">Professionals you should consider consulting.</p>
+                                <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-1">Recommended Specialists</h2>
+                                <p className="text-slate-500 dark:text-slate-400 text-sm">Professionals you should consider consulting.</p>
                             </div>
                         </div>
 
@@ -169,16 +169,16 @@ const Recommendations = () => {
                             {data?.specialists.length > 0 ? data.specialists.map((specialist, idx) => (
                                 <div
                                     key={idx}
-                                    className="group p-5 bg-slate-50 rounded-xl border border-slate-100 hover:border-violet-200 hover:bg-white hover:shadow-soft transition-all duration-300"
+                                    className="group p-5 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-violet-200 dark:hover:border-violet-700/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-soft transition-all duration-300"
                                 >
-                                    <div className="w-10 h-10 bg-violet-50 rounded-full flex items-center justify-center text-violet-500 mb-4 group-hover:scale-110 transition-transform duration-300 border border-violet-100">
+                                    <div className="w-10 h-10 bg-violet-50 dark:bg-violet-900/20 rounded-full flex items-center justify-center text-violet-500 border border-violet-100 dark:border-violet-900/30 mb-4 group-hover:scale-110 transition-transform duration-300">
                                         <UserPlus className="w-5 h-5" />
                                     </div>
-                                    <h3 className="font-bold text-slate-800 mb-1 flex items-center gap-2 flex-wrap">
+                                    <h3 className="font-bold text-slate-800 dark:text-white mb-1 flex items-center gap-2 flex-wrap">
                                         {specialist}
                                         <span className="badge-info text-[10px]">Coming Soon</span>
                                     </h3>
-                                    <p className="text-sm text-slate-500 mb-4">Recommended based on your recent analysis.</p>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Recommended based on your recent analysis.</p>
                                     <button className="text-sm font-semibold text-slate-400 cursor-not-allowed flex items-center gap-1" disabled>
                                         Find Nearby <ArrowRight className="w-4 h-4" />
                                     </button>

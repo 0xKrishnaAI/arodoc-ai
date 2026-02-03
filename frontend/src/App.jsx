@@ -22,9 +22,9 @@ import ProtectedRoute from './components/ProtectedRoute'
 import PublicRoute from './components/PublicRoute'
 import AIChat from './components/AIChat'
 import Landing from './pages/Landing'
-import PrescriptionScan from './pages/PrescriptionScan'
-import MedicineComparison from './pages/MedicineComparison'
 import SOSButton from './components/SOSButton'
+import MedicineComparison from './pages/MedicineComparison'
+import { ThemeProvider } from './context/ThemeContext'
 
 // Landing component is now imported from ./pages/Landing
 
@@ -48,10 +48,10 @@ const AnimatedRoutes = () => {
                 <Route path="/analysis" element={<ProtectedRoute><Analysis /></ProtectedRoute>} />
                 <Route path="/recommendations" element={<ProtectedRoute><Recommendations /></ProtectedRoute>} />
                 <Route path="/hospitals" element={<ProtectedRoute><HospitalLocator /></ProtectedRoute>} />
-                <Route path="/scan-prescription" element={<ProtectedRoute><PrescriptionScan /></ProtectedRoute>} />
-                <Route path="/compare-prices" element={<ProtectedRoute><MedicineComparison /></ProtectedRoute>} />
+                <Route path="/emergency" element={<ProtectedRoute><Emergency /></ProtectedRoute>} />
                 <Route path="/emergency" element={<ProtectedRoute><Emergency /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/medicines" element={<ProtectedRoute><MedicineComparison /></ProtectedRoute>} />
 
                 {/* General Information (Public) */}
                 <Route path="/privacy" element={<Privacy />} />
@@ -64,15 +64,17 @@ const AnimatedRoutes = () => {
 function App() {
     return (
         <AuthProvider>
-            <Router>
-                <ErrorBoundary>
+            <ThemeProvider>
+                <Router>
                     <ErrorBoundary>
-                        <AnimatedRoutes />
+                        <ErrorBoundary>
+                            <AnimatedRoutes />
+                        </ErrorBoundary>
                     </ErrorBoundary>
-                </ErrorBoundary>
-                <AIChat />
-                <SOSButton />
-            </Router>
+                    <AIChat />
+                    <SOSButton />
+                </Router>
+            </ThemeProvider>
         </AuthProvider>
     )
 }

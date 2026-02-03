@@ -63,13 +63,13 @@ const Emergency = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background pb-32 lg:pb-12">
+        <div className="min-h-screen bg-background pb-32 lg:pb-12 dark:bg-slate-950">
             <Navbar />
 
             {/* Enhanced red accent for emergency context */}
             <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
-                <div className="absolute top-[-10%] left-[50%] transform -translate-x-1/2 w-[60%] h-[40%] rounded-full bg-red-100/40 blur-[120px] animate-pulse-soft"></div>
-                <div className="absolute bottom-[-10%] right-[10%] w-[40%] h-[40%] rounded-full bg-red-50/30 blur-[100px]"></div>
+                <div className="absolute top-[-10%] left-[50%] transform -translate-x-1/2 w-[60%] h-[40%] rounded-full bg-red-100/40 dark:bg-red-900/10 blur-[120px] animate-pulse-soft"></div>
+                <div className="absolute bottom-[-10%] right-[10%] w-[40%] h-[40%] rounded-full bg-red-50/30 dark:bg-red-900/5 blur-[100px]"></div>
             </div>
 
             <div className="max-w-xl mx-auto px-6 py-8 pt-28 lg:pt-32">
@@ -79,11 +79,11 @@ const Emergency = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-10 text-center"
                 >
-                    <div className="inline-flex items-center justify-center p-3 bg-red-50 rounded-2xl mb-4 text-red-500 border border-red-100">
+                    <div className="inline-flex items-center justify-center p-3 bg-red-50 dark:bg-red-900/20 rounded-2xl mb-4 text-red-500 border border-red-100 dark:border-red-900/30">
                         <ShieldAlert className="w-7 h-7" />
                     </div>
-                    <h1 className="text-3xl font-bold text-slate-800 mb-2">Emergency Hub</h1>
-                    <p className="text-slate-500 text-lg">Quick Actions & Trusted Contacts</p>
+                    <h1 className="text-3xl font-bold text-slate-800 dark:text-white mb-2">Emergency Hub</h1>
+                    <p className="text-slate-500 dark:text-slate-400 text-lg">Quick Actions & Trusted Contacts</p>
                 </motion.header>
 
                 {/* SOS Button */}
@@ -93,7 +93,7 @@ const Emergency = () => {
                     transition={{ delay: 0.1 }}
                     className="mb-10 flex justify-center"
                 >
-                    <SOSButton />
+                    <SOSButton inline />
                 </motion.div>
 
                 {/* Contacts Section */}
@@ -101,12 +101,12 @@ const Emergency = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="card p-6"
+                    className="card p-6 dark:bg-slate-900 dark:border-slate-800"
                 >
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h2 className="text-lg font-bold text-slate-800">Emergency Contacts</h2>
-                            <p className="text-sm text-slate-500">People to notify in case of SOS</p>
+                            <h2 className="text-lg font-bold text-slate-800 dark:text-white">Emergency Contacts</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">People to notify in case of SOS</p>
                         </div>
                         <button
                             onClick={() => setShowForm(!showForm)}
@@ -125,24 +125,24 @@ const Emergency = () => {
                                 animate={{ height: 'auto', opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
                                 onSubmit={handleAddContact}
-                                className="mb-6 p-5 bg-slate-50 rounded-xl border border-slate-100 overflow-hidden"
+                                className="mb-6 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 overflow-hidden"
                             >
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="font-bold text-slate-800">New Contact Details</h3>
+                                    <h3 className="font-bold text-slate-800 dark:text-white">New Contact Details</h3>
                                     <button
                                         type="button"
                                         onClick={() => setShowForm(false)}
-                                        className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
+                                        className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
                                     >
-                                        <X className="w-4 h-4 text-slate-500" />
+                                        <X className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                                     </button>
                                 </div>
                                 <div className="grid gap-4">
                                     <div>
-                                        <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5 block">Full Name</label>
+                                        <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5 block">Full Name</label>
                                         <input
                                             placeholder="e.g. John Doe"
-                                            className="input-field"
+                                            className="input-field dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-500"
                                             value={newContact.name}
                                             onChange={e => setNewContact({ ...newContact, name: e.target.value })}
                                             required
@@ -150,20 +150,20 @@ const Emergency = () => {
                                     </div>
                                     <div className="grid grid-cols-2 gap-3">
                                         <div>
-                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5 block">Phone Number</label>
+                                            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5 block">Phone Number</label>
                                             <input
                                                 placeholder="+91 98765 43210"
-                                                className="input-field"
+                                                className="input-field dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-500"
                                                 value={newContact.phone_number}
                                                 onChange={e => setNewContact({ ...newContact, phone_number: e.target.value })}
                                                 required
                                             />
                                         </div>
                                         <div>
-                                            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5 block">Relationship</label>
+                                            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5 block">Relationship</label>
                                             <input
                                                 placeholder="e.g. Son, Doctor"
-                                                className="input-field"
+                                                className="input-field dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-500"
                                                 value={newContact.relationship}
                                                 onChange={e => setNewContact({ ...newContact, relationship: e.target.value })}
                                             />
@@ -194,33 +194,33 @@ const Emergency = () => {
                     {/* Contact List */}
                     <div className="space-y-3">
                         {contacts.length === 0 && (
-                            <div className="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                                <p className="text-slate-400 font-medium">No emergency contacts listed.</p>
-                                <p className="text-sm text-slate-400">Add family members or doctors.</p>
+                            <div className="text-center py-8 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">
+                                <p className="text-slate-400 dark:text-slate-500 font-medium">No emergency contacts listed.</p>
+                                <p className="text-sm text-slate-400 dark:text-slate-500">Add family members or doctors.</p>
                             </div>
                         )}
                         {contacts.map((contact) => (
                             <motion.div
                                 key={contact.id}
                                 layout
-                                className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 hover:border-primary-200 hover:bg-white transition-all duration-300 rounded-xl group"
+                                className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 hover:border-primary-200 dark:hover:border-primary-700 hover:bg-white dark:hover:bg-slate-800 transition-all duration-300 rounded-xl group"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className="w-11 h-11 bg-primary-50 rounded-xl flex items-center justify-center text-primary font-bold border border-primary-100">
+                                    <div className="w-11 h-11 bg-primary-50 dark:bg-primary-900/20 rounded-xl flex items-center justify-center text-primary font-bold border border-primary-100 dark:border-primary-900/30">
                                         {contact.name.charAt(0)}
                                     </div>
                                     <div>
-                                        <p className="font-semibold text-slate-800">{contact.name}</p>
+                                        <p className="font-semibold text-slate-800 dark:text-white">{contact.name}</p>
                                         <p className="text-xs font-semibold text-primary uppercase tracking-wide">{contact.relationship}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="hidden sm:block font-mono text-sm font-medium text-slate-500 bg-white px-2.5 py-1 rounded-lg border border-slate-100">
+                                    <span className="hidden sm:block font-mono text-sm font-medium text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-100 dark:border-slate-700">
                                         {contact.phone_number}
                                     </span>
                                     <a
                                         href={`tel:${contact.phone_number}`}
-                                        className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100 transition-colors duration-300 border border-emerald-100"
+                                        className="p-2.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors duration-300 border border-emerald-100 dark:border-emerald-900/30"
                                     >
                                         <Phone className="w-4 h-4" />
                                     </a>

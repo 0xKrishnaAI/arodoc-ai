@@ -41,7 +41,7 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background pb-24 gradient-hero">
+        <div className="min-h-screen bg-background pb-24 gradient-hero dark:bg-slate-950 dark:bg-none">
             <Navbar />
 
             {/* Enhanced background effects */}
@@ -56,15 +56,15 @@ const Login = () => {
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-                    className="glass-panel p-8 md:p-10 shadow-glass-lg border-white/50 backdrop-blur-2xl"
+                    className="glass-panel p-8 md:p-10 shadow-glass-lg border-white/50 dark:border-white/10 backdrop-blur-2xl dark:bg-slate-900/60"
                 >
                     {/* Header */}
                     <div className="text-center mb-10">
                         <div className="w-16 h-16 bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl flex items-center justify-center text-primary mx-auto mb-6 border border-primary-100 shadow-soft">
                             <LogIn className="w-7 h-7" />
                         </div>
-                        <h2 className="text-2xl lg:text-3xl font-bold text-slate-800 mb-2">Welcome Back</h2>
-                        <p className="text-slate-500">Sign in to access your health dashboard</p>
+                        <h2 className="text-2xl lg:text-3xl font-bold text-slate-800 dark:text-white mb-2">Welcome Back</h2>
+                        <p className="text-slate-500 dark:text-slate-400">Sign in to access your health dashboard</p>
                     </div>
 
 
@@ -76,7 +76,7 @@ const Login = () => {
                                 setEmail('demo@arodoc.ai');
                                 setPassword('demo123');
                             }}
-                            className="w-full flex items-center justify-center gap-2 p-3 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-100 hover:bg-emerald-100 transition-all font-medium text-sm group"
+                            className="w-full flex items-center justify-center gap-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-xl border border-emerald-100 dark:border-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-all font-medium text-sm group"
                         >
                             <span className="w-2 h-2 rounded-full bg-emerald-500 group-hover:animate-pulse"></span>
                             Use Demo Account (Judge View)
@@ -86,12 +86,12 @@ const Login = () => {
                     {/* Form */}
                     <form onSubmit={handleLogin} className="space-y-5">
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-slate-600 ml-1">Email Address</label>
+                            <label className="text-sm font-semibold text-slate-600 dark:text-slate-300 ml-1">Email Address</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                                 <input
                                     type="email"
-                                    className="input-field pl-12"
+                                    className="input-field pl-12 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-500"
                                     placeholder="name@example.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -101,12 +101,12 @@ const Login = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-slate-600 ml-1">Password</label>
+                            <label className="text-sm font-semibold text-slate-600 dark:text-slate-300 ml-1">Password</label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                                 <input
                                     type="password"
-                                    className="input-field pl-12"
+                                    className="input-field pl-12 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-500"
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
@@ -135,7 +135,7 @@ const Login = () => {
 
                     {/* Footer */}
                     <div className="mt-8 text-center">
-                        <p className="text-slate-500">
+                        <p className="text-slate-500 dark:text-slate-400">
                             Don't have an account?{' '}
                             <Link to="/signup" className="text-primary font-semibold hover:underline underline-offset-2 transition-colors">
                                 Create Account

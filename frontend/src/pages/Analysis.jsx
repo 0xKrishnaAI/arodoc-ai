@@ -62,7 +62,7 @@ const Analysis = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background pb-32 lg:pb-12 gradient-calm">
+        <div className="min-h-screen bg-background pb-32 lg:pb-12 gradient-calm dark:bg-slate-950 dark:bg-none">
             <Navbar />
             <div className="max-w-6xl mx-auto px-6 py-8 pt-28 lg:pt-32">
                 {/* Header */}
@@ -71,12 +71,12 @@ const Analysis = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-10 text-center lg:text-left"
                 >
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-50 text-primary-600 font-semibold text-sm mb-4 border border-primary-100">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-semibold text-sm mb-4 border border-primary-100 dark:border-primary-900/30">
                         <Sparkles className="w-4 h-4" />
                         <span>AI-Powered Insights</span>
                     </div>
-                    <h1 className="text-3xl lg:text-4xl font-bold text-slate-800 mb-2">Health Analysis</h1>
-                    <p className="text-slate-500 text-lg">Upload medical reports for instant, simplified health summaries.</p>
+                    <h1 className="text-3xl lg:text-4xl font-bold text-slate-800 dark:text-white mb-2">Health Analysis</h1>
+                    <p className="text-slate-500 dark:text-slate-400 text-lg">Upload medical reports for instant, simplified health summaries.</p>
                 </motion.header>
 
                 <div className="grid lg:grid-cols-3 gap-8 items-start">
@@ -88,14 +88,14 @@ const Analysis = () => {
                         className="lg:col-span-1"
                     >
                         <div className="card p-6 sticky top-24">
-                            <h2 className="text-lg font-bold mb-5 text-slate-800 flex items-center gap-2">
+                            <h2 className="text-lg font-bold mb-5 text-slate-800 dark:text-white flex items-center gap-2">
                                 <Wand2 className="w-5 h-5 text-primary" />
                                 New Analysis
                             </h2>
                             <FileUpload onUploadSuccess={handleUploadSuccess} />
 
-                            <div className="mt-6 p-4 bg-primary-50/50 rounded-xl border border-primary-100 text-sm text-slate-600">
-                                <p className="font-semibold text-primary mb-2 flex items-center gap-2">
+                            <div className="mt-6 p-4 bg-primary-50/50 dark:bg-primary-900/10 rounded-xl border border-primary-100 dark:border-primary-900/20 text-sm text-slate-600 dark:text-slate-400">
+                                <p className="font-semibold text-primary dark:text-primary-400 mb-2 flex items-center gap-2">
                                     <FileText className="w-4 h-4" />
                                     Supported Formats
                                 </p>
@@ -116,7 +116,7 @@ const Analysis = () => {
                         className="lg:col-span-2"
                     >
                         <div className="flex items-center justify-between mb-5">
-                            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <h2 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
                                 <FileText className="w-5 h-5 text-primary" />
                                 Recent Reports
                             </h2>
@@ -133,11 +133,11 @@ const Analysis = () => {
                                 </div>
                             ) : reports.length === 0 ? (
                                 <div className="text-center py-16 card border-dashed border-2 border-slate-200 bg-slate-50/50">
-                                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-5 text-slate-300 shadow-sm">
+                                    <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-5 text-slate-300 dark:text-slate-600 shadow-sm">
                                         <FileText className="w-8 h-8" />
                                     </div>
-                                    <h3 className="font-bold text-slate-700 mb-2">No reports found</h3>
-                                    <p className="text-slate-500 max-w-xs mx-auto text-sm">Upload your first medical report to unlock AI-powered insights.</p>
+                                    <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-2">No reports found</h3>
+                                    <p className="text-slate-500 dark:text-slate-400 max-w-xs mx-auto text-sm">Upload your first medical report to unlock AI-powered insights.</p>
                                 </div>
                             ) : (
                                 <AnimatePresence>
@@ -149,7 +149,7 @@ const Analysis = () => {
                                             exit={{ opacity: 0, scale: 0.95 }}
                                             key={report.id}
                                             onClick={() => setSelectedReport(report)}
-                                            className="card-interactive p-5 group relative overflow-hidden bg-white hover:bg-slate-50/50"
+                                            className="card-interactive p-5 group relative overflow-hidden bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/50"
                                         >
                                             <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-2 group-hover:translate-x-0">
                                                 <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center text-primary">
@@ -158,14 +158,14 @@ const Analysis = () => {
                                             </div>
 
                                             <div className="flex items-start gap-4">
-                                                <div className="w-14 h-14 bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl flex items-center justify-center text-primary shrink-0 border border-primary-100/50 group-hover:scale-105 transition-transform duration-300 shadow-sm">
+                                                <div className="w-14 h-14 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-2xl flex items-center justify-center text-primary dark:text-primary-400 shrink-0 border border-primary-100/50 dark:border-primary-500/10 group-hover:scale-105 transition-transform duration-300 shadow-sm">
                                                     <FileText className="w-7 h-7" />
                                                 </div>
 
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-start justify-between gap-8">
                                                         <div>
-                                                            <h3 className="font-bold text-slate-800 truncate pr-4 mb-1 text-lg group-hover:text-primary transition-colors">
+                                                            <h3 className="font-bold text-slate-800 dark:text-white truncate pr-4 mb-1 text-lg group-hover:text-primary transition-colors">
                                                                 {report.file_url.split('/').pop().split('_').slice(1).join('_') || "Medical Report"}
                                                             </h3>
                                                             <div className="flex items-center gap-3 text-xs font-medium text-slate-400">
@@ -181,8 +181,8 @@ const Analysis = () => {
                                                         </span>
                                                     </div>
 
-                                                    <div className="mt-4 pt-4 border-t border-slate-100/60 flex items-center justify-between gap-4">
-                                                        <p className="text-slate-600 text-sm line-clamp-2 leading-relaxed flex-1 opacity-90">
+                                                    <div className="mt-4 pt-4 border-t border-slate-100/60 dark:border-slate-800 flex items-center justify-between gap-4">
+                                                        <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 leading-relaxed flex-1 opacity-90">
                                                             {report.summary}
                                                         </p>
 

@@ -88,10 +88,10 @@ const FileUpload = ({ onUploadSuccess }) => {
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
                 className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${dragActive
-                        ? 'border-primary bg-primary-50 scale-[1.02]'
-                        : file
-                            ? 'border-emerald-300 bg-emerald-50'
-                            : 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100'
+                    ? 'border-primary bg-primary-50 dark:bg-primary-900/20 scale-[1.02]'
+                    : file
+                        ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20'
+                        : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
             >
                 <input
@@ -112,11 +112,11 @@ const FileUpload = ({ onUploadSuccess }) => {
                             className="space-y-3"
                         >
                             {preview ? (
-                                <div className="relative w-20 h-20 mx-auto rounded-xl overflow-hidden border border-slate-200 shadow-soft">
+                                <div className="relative w-20 h-20 mx-auto rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-soft">
                                     <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                                 </div>
                             ) : (
-                                <div className="w-16 h-16 bg-primary-50 rounded-xl flex items-center justify-center mx-auto border border-primary-100">
+                                <div className="w-16 h-16 bg-primary-50 dark:bg-primary-900/20 rounded-xl flex items-center justify-center mx-auto border border-primary-100 dark:border-primary-900/30">
                                     <FileText className="w-8 h-8 text-primary" />
                                 </div>
                             )}
@@ -139,12 +139,12 @@ const FileUpload = ({ onUploadSuccess }) => {
                             exit={{ opacity: 0 }}
                             className="space-y-3"
                         >
-                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center mx-auto transition-colors duration-300 ${dragActive ? 'bg-primary-100 text-primary' : 'bg-slate-100 text-slate-400'
+                            <div className={`w-14 h-14 rounded-xl flex items-center justify-center mx-auto transition-colors duration-300 ${dragActive ? 'bg-primary-100 dark:bg-primary-900/30 text-primary' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
                                 }`}>
                                 <Upload className="w-7 h-7" />
                             </div>
                             <div>
-                                <p className="text-sm font-medium text-slate-700">
+                                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
                                     Drop your file here, or <span className="text-primary">browse</span>
                                 </p>
                                 <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG up to 10MB</p>
